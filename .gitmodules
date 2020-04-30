@@ -1,0 +1,3 @@
+[submodule "Assets/Packages/unity-simplex-geometry"]
+	path = Assets/Packages/unity-simplex-geometry
+	url = git@github.com:komietty/unity-simplex-geometry.git
