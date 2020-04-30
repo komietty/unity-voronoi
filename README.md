@@ -1,6 +1,6 @@
 # unity-drauney-triangulation
 2D and 3D drauney triangulation module with bistellar flip method.  
-3D version does not works but could be not resolved. Please PR me if you could solve errors.
+3D version does not works and yet not resolved. Please PR me if you could solve errors (or issue is welcome as well).
 
 <img src="Imgs/Capture.PNG" width=50%>
 
