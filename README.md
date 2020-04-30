@@ -15,4 +15,3 @@ Tested on Unity 2019.3.11f1, windows10 (RTX 2080 max-q).
 ## reference
 
 http://www.gdmc.nl/publications/2007/Computing_3D_Voronoi_Diagram.pdf
-# unity-drauney-triangulation
