@@ -4,42 +4,43 @@ using UnityEngine;
 using kmty.geom.d3;
 using System.Linq;
 using Unity.Mathematics;
+using DN = DelaunayGraphNode3D;
 
 public class DelaunayGraphNode3D {
     public Tetrahedra tetrahedra;
-    public List<DelaunayGraphNode3D> children;
-    public List<DelaunayGraphNode3D> neighbor;
-
-    public DelaunayGraphNode3D(double3 a, double3 b, double3 c, double3 d) {
-        tetrahedra = new Tetrahedra(a, b, c, d);
-        children = new List<DelaunayGraphNode3D>();
-        neighbor = new List<DelaunayGraphNode3D>();
-    }
+    public List<DN> children;
+    public List<DN> neighbor;
 
     public DelaunayGraphNode3D(Triangle t, double3 d) : this(t.a, t.b, t.c, d) { }
+    public DelaunayGraphNode3D(double3 a, double3 b, double3 c, double3 d) {
+        tetrahedra = new Tetrahedra(a, b, c, d);
+        children = new List<DN>();
+        neighbor = new List<DN>();
+    }
+
 
     public bool hasChild => children.Count > 0;
 
     public void Split(double3 p) {
         var thd = tetrahedra;
         if (thd.Contains(p, false)) {
-            var p_abc = new DelaunayGraphNode3D(p, thd.a, thd.b, thd.c);
-            var p_bcd = new DelaunayGraphNode3D(p, thd.b, thd.c, thd.d);
-            var p_cda = new DelaunayGraphNode3D(p, thd.c, thd.d, thd.a);
-            var p_dab = new DelaunayGraphNode3D(p, thd.d, thd.a, thd.b);
-            p_abc.neighbor = new List<DelaunayGraphNode3D> { p_bcd, p_cda, p_dab };
-            p_bcd.neighbor = new List<DelaunayGraphNode3D> { p_cda, p_dab, p_abc };
-            p_cda.neighbor = new List<DelaunayGraphNode3D> { p_dab, p_abc, p_bcd };
-            p_dab.neighbor = new List<DelaunayGraphNode3D> { p_abc, p_bcd, p_cda };
+            var p_abc = new DN(p, thd.a, thd.b, thd.c);
+            var p_bcd = new DN(p, thd.b, thd.c, thd.d);
+            var p_cda = new DN(p, thd.c, thd.d, thd.a);
+            var p_dab = new DN(p, thd.d, thd.a, thd.b);
+            p_abc.neighbor = new List<DN> { p_bcd, p_cda, p_dab };
+            p_bcd.neighbor = new List<DN> { p_cda, p_dab, p_abc };
+            p_cda.neighbor = new List<DN> { p_dab, p_abc, p_bcd };
+            p_dab.neighbor = new List<DN> { p_abc, p_bcd, p_cda };
             SetNeighbors(p_abc, new Triangle(thd.a, thd.b, thd.c));
             SetNeighbors(p_bcd, new Triangle(thd.b, thd.c, thd.d));
             SetNeighbors(p_cda, new Triangle(thd.c, thd.d, thd.a));
             SetNeighbors(p_dab, new Triangle(thd.d, thd.a, thd.b));
-            children = new List<DelaunayGraphNode3D> { p_abc, p_bcd, p_cda, p_dab };
+            children = new List<DN> { p_abc, p_bcd, p_cda, p_dab };
         }
     }
 
-    void SetNeighbors(DelaunayGraphNode3D tgt, Triangle t) {
+    void SetNeighbors(DN tgt, Triangle t) {
         var pair = GetFacingNode(t);
         if (pair != null) {
             tgt.neighbor.Add(pair);
@@ -47,16 +48,16 @@ public class DelaunayGraphNode3D {
         }
     }
 
-    public void Flip23(DelaunayGraphNode3D pair, Triangle t, double3 pointThis, double3 pointPair) {
+    public void Flip23(DN pair, Triangle t, double3 pointThis, double3 pointPair) {
         if (DataBaseUtil.CheckDuplication(new Vector3[] { (float3)t.a, (float3)t.b, (float3)t.c, (float3)pointThis, (float3)pointPair })) throw new System.Exception();
 
-        var nodeA = new DelaunayGraphNode3D(pointThis, pointPair, t.a, t.b);
-        var nodeB = new DelaunayGraphNode3D(pointThis, pointPair, t.b, t.c);
-        var nodeC = new DelaunayGraphNode3D(pointThis, pointPair, t.c, t.a);
+        var nodeA = new DN(pointThis, pointPair, t.a, t.b);
+        var nodeB = new DN(pointThis, pointPair, t.b, t.c);
+        var nodeC = new DN(pointThis, pointPair, t.c, t.a);
 
-        nodeA.neighbor = new List<DelaunayGraphNode3D> { nodeB, nodeC };
-        nodeB.neighbor = new List<DelaunayGraphNode3D> { nodeC, nodeA };
-        nodeC.neighbor = new List<DelaunayGraphNode3D> { nodeA, nodeB };
+        nodeA.neighbor = new List<DN> { nodeB, nodeC };
+        nodeB.neighbor = new List<DN> { nodeC, nodeA };
+        nodeC.neighbor = new List<DN> { nodeA, nodeB };
 
         nodeA.SetNeighborWhenFlip(new Triangle(t.a, t.b, pointThis), this);
         nodeA.SetNeighborWhenFlip(new Triangle(t.a, t.b, pointPair), pair);
@@ -65,29 +66,29 @@ public class DelaunayGraphNode3D {
         nodeC.SetNeighborWhenFlip(new Triangle(t.c, t.a, pointThis), this);
         nodeC.SetNeighborWhenFlip(new Triangle(t.c, t.a, pointPair), pair);
 
-        this.children = new List<DelaunayGraphNode3D> { nodeA, nodeB, nodeC };
-        pair.children = new List<DelaunayGraphNode3D> { nodeA, nodeB, nodeC };
+        this.children = new List<DN> { nodeA, nodeB, nodeC };
+        pair.children = new List<DN> { nodeA, nodeB, nodeC };
     }
 
 
-    public void Flip32(DelaunayGraphNode3D pair0, Triangle t, double3 pointThis, double3 pointPair, double3 pointAway) {
+    public void Flip32(DN pair0, Triangle t, double3 pointThis, double3 pointPair, double3 pointAway) {
         var edge = t.Remaining(pointAway);
         var pair1 = GetFacingNode(new Triangle(edge.a, edge.b, pointThis));
 
         if (pair1 == null) {
-            Debug.LogWarning("pair1 is not exist");
+            //Debug.LogWarning("pair1 is not exist");
             return;
         }
         if (Equals(pair1.tetrahedra.RemainingPoint(new Triangle(edge.a, edge.b, pointThis)), pointPair) == false) {
-            Debug.LogWarning("not 3 to 2 case");
+            //Debug.LogWarning("not 3 to 2 case");
             return;
         }
 
-        var nodeA = new DelaunayGraphNode3D(pointThis, pointPair, pointAway, edge.a);
-        var nodeB = new DelaunayGraphNode3D(pointThis, pointPair, pointAway, edge.b);
+        var nodeA = new DN(pointThis, pointPair, pointAway, edge.a);
+        var nodeB = new DN(pointThis, pointPair, pointAway, edge.b);
 
-        nodeA.neighbor = new List<DelaunayGraphNode3D> { nodeB };
-        nodeB.neighbor = new List<DelaunayGraphNode3D> { nodeA };
+        nodeA.neighbor = new List<DN> { nodeB };
+        nodeB.neighbor = new List<DN> { nodeA };
 
         nodeA.SetFacingNode(new Triangle(edge.a, pointThis, pointAway), this);  // except pointPair => search from this
         nodeA.SetFacingNode(new Triangle(edge.a, pointPair, pointAway), pair0); // except pointThis => search from pair0
@@ -96,13 +97,13 @@ public class DelaunayGraphNode3D {
         nodeB.SetFacingNode(new Triangle(edge.b, pointPair, pointAway), pair0); // except pointThis => search from pair0
         nodeB.SetFacingNode(new Triangle(edge.b, pointThis, pointPair), pair1); // except pointAway => search from pair1
 
-        this.children  = new List<DelaunayGraphNode3D> { nodeA, nodeB };
-        pair0.children = new List<DelaunayGraphNode3D> { nodeA, nodeB };
-        pair1.children = new List<DelaunayGraphNode3D> { nodeA, nodeB };
+        this.children  = new List<DN> { nodeA, nodeB };
+        pair0.children = new List<DN> { nodeA, nodeB };
+        pair1.children = new List<DN> { nodeA, nodeB };
 
     }
 
-    void SetNeighborWhenFlip(Triangle t, DelaunayGraphNode3D _this) {
+    void SetNeighborWhenFlip(Triangle t, DN _this) {
         var _pair = _this.GetFacingNode(t);
         if (_pair != null) {
             this.neighbor.Add(_pair);
@@ -110,13 +111,40 @@ public class DelaunayGraphNode3D {
         }
     }
 
-    public void SetFacingNode(Triangle t, DelaunayGraphNode3D node) {
+    public void SetFacingNode(Triangle t, DN node) {
         if (node.tetrahedra.HasFace(t) == false) return;
         neighbor = neighbor.Select(n => n.tetrahedra.HasFace(t) ? node : n).ToList();
     }
 
-    public DelaunayGraphNode3D GetFacingNode(Triangle t) {
+    public DN GetFacingNode(Triangle t) {
         if (tetrahedra.HasFace(t) == false) return null;
         return neighbor.Find(n => n.tetrahedra.HasFace(t));
+    }
+}
+
+public class Voronoi3D {
+    public DN[] delaunaies;
+    public List<Segment> segments;
+
+    public Voronoi3D(DN[] delaunaies) {
+        this.delaunaies = delaunaies;
+        segments = new List<Segment>();
+        foreach (var d in delaunaies) {
+            var c0 = d.tetrahedra.GetCircumscribedSphere(1e-15d).center;
+            //c0 = new double3(
+            //    math.saturate(c0.x),
+            //    math.saturate(c0.y),
+            //    math.saturate(c0.z)
+            //);
+            d.neighbor.ForEach(n => {
+                var c1 = n.tetrahedra.GetCircumscribedSphere(1e-15d).center;
+                //c1 = new double3(
+                //    math.saturate(c1.x),
+                //    math.saturate(c1.y),
+                //    math.saturate(c1.z)
+                //);
+                segments.Add(new Segment(c0, c1));
+            });
+        }
     }
 }
