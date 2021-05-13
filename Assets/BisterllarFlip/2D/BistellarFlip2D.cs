@@ -13,36 +13,25 @@ public class BistellarFlip2D {
     public BistellarFlip2D(int num) {
         root = new DN(Vector2.zero, new Vector2(2, 0), new Vector2(0, 2));
         tips = new List<DN>();
-        //var na = new DN(Vector2.zero, Vector2.right, Vector2.up);
-        //var nb = new DN(Vector2.one, Vector2.right, Vector2.up);
-        //na.neighbor = new List<DN> { nb };
-        //nb.neighbor = new List<DN> { na };
-        //root.children = new List<DN> { na, nb };
         for (var i = 0; i < num; i++) Loop(new Vector2(UR.value, UR.value));
     }
 
     public void Loop(float2 p) {
-        var n = GetNode(p);
+        RefreshTips();
+        var n = tips.Find(_t => _t.triangle.Includes(p, true));
         var t = n.triangle;
         n.Split(p);
 
-        if (t.Includes(p, false)) {
-            n.children.ForEach(_n => Legalize(_n, new Segment(t.a, t.b), p));
-            n.children.ForEach(_n => Legalize(_n, new Segment(t.b, t.c), p));
-            n.children.ForEach(_n => Legalize(_n, new Segment(t.c, t.a), p));
-        }
-        else if (t.OnEdge(p)) {
+        if (t.OnEdge(p)) {
             if (cross(float3(t.b - t.a, 0), float3(p - t.b, 0)).z == 0) SplitOnEdge(n, p, new Segment(t.a, t.b), t.c);
             if (cross(float3(t.c - t.b, 0), float3(p - t.c, 0)).z == 0) SplitOnEdge(n, p, new Segment(t.b, t.c), t.a);
             if (cross(float3(t.a - t.c, 0), float3(p - t.a, 0)).z == 0) SplitOnEdge(n, p, new Segment(t.c, t.a), t.b);
         }
-    }
-
-    DN GetNode(Vector2 p) {
-        var n = root;
-        while (n != null && n.hasChild)
-            n = n.children.Find(c => c.triangle.Includes(p, true));
-        return n;
+        else {
+            n.children.ForEach(_n => Legalize(_n, new Segment(t.a, t.b), p));
+            n.children.ForEach(_n => Legalize(_n, new Segment(t.b, t.c), p));
+            n.children.ForEach(_n => Legalize(_n, new Segment(t.c, t.a), p));
+        }
     }
 
     public List<DN> GetResult() {
@@ -51,7 +40,7 @@ public class BistellarFlip2D {
     }
 
     void GetTips(DN n) {
-        if (!n.hasChild) tips.Add(n);
+        if (n.children.Count == 0) tips.Add(n);
         else n.children.ForEach(c => GetTips(c));
     }
 

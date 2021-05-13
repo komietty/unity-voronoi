@@ -12,7 +12,7 @@ public class DelaunayGraphNode2D {
     public Triangle triangle;
     public List<DN> children;
     public List<DN> neighbor;
-    public bool hasChild => children.Count > 0;
+    public bool Contains(Segment s) => triangle.ContainsSegment(s);
 
     public DelaunayGraphNode2D(Segment e, Vector2 c) : this(e.a, e.b, c) { }
     public DelaunayGraphNode2D(Vector2 a, Vector2 b, Vector2 c) {
@@ -42,7 +42,7 @@ public class DelaunayGraphNode2D {
         var pair = GetFacingNode(edge);
         if (pair != null) {
             tgt.neighbor.Add(pair);
-            neighbor.ForEach(n => { if (n.triangle.ContainsSegment(edge)) n.SetFacingNode(edge, tgt); });
+            neighbor.ForEach(n => { if (n.Contains(edge)) n.SetFacingNode(edge, tgt); });
         }
     }
 
@@ -70,15 +70,15 @@ public class DelaunayGraphNode2D {
         }
     }
 
-    public void SetFacingNode(Segment e, DN node) {
-        if (!node.triangle.ContainsSegment(e)) return;
-        neighbor = neighbor.Select(n => n.triangle.ContainsSegment(e) ? node : n).ToList();
+    void SetFacingNode(Segment e, DN node) {
+        if (!node.Contains(e)) return;
+        neighbor = neighbor.Select(n => n.Contains(e) ? node : n).ToList();
     }
 
-    public DN GetFacingNode(Vector2 a, Vector2 b) => GetFacingNode(new Segment(a, b));
+    public DN GetFacingNode(float2 a, float2 b) => GetFacingNode(new Segment(a, b));
     public DN GetFacingNode(Segment e) {
-        if (!triangle.ContainsSegment(e)) return null;
-        return neighbor.Find(n => n.triangle.ContainsSegment(e));
+        if (!Contains(e)) return null;
+        return neighbor.Find(n => n.Contains(e));
     }
 }
 

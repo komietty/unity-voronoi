@@ -9,6 +9,7 @@ public class Drawer2D : MonoBehaviour {
     public Material mat2;
     public int numPoint;
     public KeyCode reset = KeyCode.R;
+    public bool createMesh;
     public bool drawCirlcle;
     public bool showVoronoi;
     [Range(0, 100)] public int debugNodeId;
@@ -21,17 +22,17 @@ public class Drawer2D : MonoBehaviour {
         bf = new BistellarFlip2D(numPoint);
         nodes = bf.GetResult().ToArray();
         voronoi = new VG(nodes);
-        Debug.Log(nodes.Length);
-        Debug.Log(voronoi.nodes.Count);
-        foreach(var n in voronoi.nodes) {
-            n.Value.Meshilify();
-            var g = new GameObject();
-            var f = g.AddComponent<MeshFilter>();
-            var r = g.AddComponent<MeshRenderer>();
-            r.sharedMaterial = mat2;
-            f.mesh = n.Value.mesh;
-            g.transform.position = Vector3.forward * Random.value;
-            g.transform.SetParent(this.transform);
+        if (createMesh) {
+            foreach (var n in voronoi.nodes) {
+                n.Value.Meshilify();
+                var g = new GameObject();
+                var f = g.AddComponent<MeshFilter>();
+                var r = g.AddComponent<MeshRenderer>();
+                r.sharedMaterial = mat2;
+                f.mesh = n.Value.mesh;
+                g.transform.position = Vector3.forward * Random.value;
+                g.transform.SetParent(this.transform);
+            }
         }
     }
 
@@ -40,7 +41,6 @@ public class Drawer2D : MonoBehaviour {
         if (Input.GetKeyDown(reset)) Init();
     }
     void OnRenderObject() {
-        //GL.Clear(true, true, Color.clear);
         if (showVoronoi) DrawVoronoi();
         else DrawDelaunay();
     }

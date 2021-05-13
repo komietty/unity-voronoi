@@ -10,6 +10,8 @@ public class DelaunayGraphNode3D {
     public Tetrahedra tetrahedra;
     public List<DN> children;
     public List<DN> neighbor;
+    public bool Contains(double3 p, bool includeOnFacet) => tetrahedra.Contains(p, includeOnFacet);
+    public bool HasFacet(Triangle t) => tetrahedra.HasFace(t);
 
     public DelaunayGraphNode3D(Triangle t, double3 d) : this(t.a, t.b, t.c, d) { }
     public DelaunayGraphNode3D(double3 a, double3 b, double3 c, double3 d) {
@@ -18,24 +20,24 @@ public class DelaunayGraphNode3D {
         neighbor = new List<DN>();
     }
 
-
-    public bool hasChild => children.Count > 0;
-
     public void Split(double3 p) {
-        var thd = tetrahedra;
-        if (thd.Contains(p, false)) {
-            var p_abc = new DN(p, thd.a, thd.b, thd.c);
-            var p_bcd = new DN(p, thd.b, thd.c, thd.d);
-            var p_cda = new DN(p, thd.c, thd.d, thd.a);
-            var p_dab = new DN(p, thd.d, thd.a, thd.b);
+        var a = tetrahedra.a;
+        var b = tetrahedra.b;
+        var c = tetrahedra.c;
+        var d = tetrahedra.d;
+        if (tetrahedra.Contains(p, false)) {
+            var p_abc = new DN(p, a, b, c);
+            var p_bcd = new DN(p, b, c, d);
+            var p_cda = new DN(p, c, d, a);
+            var p_dab = new DN(p, d, a, b);
             p_abc.neighbor = new List<DN> { p_bcd, p_cda, p_dab };
             p_bcd.neighbor = new List<DN> { p_cda, p_dab, p_abc };
             p_cda.neighbor = new List<DN> { p_dab, p_abc, p_bcd };
             p_dab.neighbor = new List<DN> { p_abc, p_bcd, p_cda };
-            SetNeighbors(p_abc, new Triangle(thd.a, thd.b, thd.c));
-            SetNeighbors(p_bcd, new Triangle(thd.b, thd.c, thd.d));
-            SetNeighbors(p_cda, new Triangle(thd.c, thd.d, thd.a));
-            SetNeighbors(p_dab, new Triangle(thd.d, thd.a, thd.b));
+            SetNeighbors(p_abc, new Triangle(a, b, c));
+            SetNeighbors(p_bcd, new Triangle(b, c, d));
+            SetNeighbors(p_cda, new Triangle(c, d, a));
+            SetNeighbors(p_dab, new Triangle(d, a, b));
             children = new List<DN> { p_abc, p_bcd, p_cda, p_dab };
         }
     }
@@ -44,12 +46,12 @@ public class DelaunayGraphNode3D {
         var pair = GetFacingNode(t);
         if (pair != null) {
             tgt.neighbor.Add(pair);
-            neighbor.ForEach(n => { if (n.tetrahedra.HasFace(t)) n.SetFacingNode(t, tgt); });
+            neighbor.ForEach(n => { if (n.HasFacet(t)) n.SetFacingNode(t, tgt); });
         }
     }
 
     public void Flip23(DN pair, Triangle t, double3 pointThis, double3 pointPair) {
-        if (DataBaseUtil.CheckDuplication(new Vector3[] { (float3)t.a, (float3)t.b, (float3)t.c, (float3)pointThis, (float3)pointPair })) throw new System.Exception();
+        if (DataBaseUtil.CheckDuplication(new double3[] { t.a, t.b, t.c, pointThis, pointPair })) throw new System.Exception();
 
         var nodeA = new DN(pointThis, pointPair, t.a, t.b);
         var nodeB = new DN(pointThis, pointPair, t.b, t.c);
@@ -76,11 +78,11 @@ public class DelaunayGraphNode3D {
         var pair1 = GetFacingNode(new Triangle(edge.a, edge.b, pointThis));
 
         if (pair1 == null) {
-            //Debug.LogWarning("pair1 is not exist");
+            Debug.LogWarning("pair not find");
             return;
-        }
-        if (Equals(pair1.tetrahedra.RemainingPoint(new Triangle(edge.a, edge.b, pointThis)), pointPair) == false) {
-            //Debug.LogWarning("not 3 to 2 case");
+        } 
+        if (!Equals(pair1.tetrahedra.RemainingPoint(new Triangle(edge.a, edge.b, pointThis)), pointPair)) {
+            Debug.LogWarning("not 3 to 2 case");
             return;
         }
 
@@ -112,13 +114,13 @@ public class DelaunayGraphNode3D {
     }
 
     public void SetFacingNode(Triangle t, DN node) {
-        if (node.tetrahedra.HasFace(t) == false) return;
-        neighbor = neighbor.Select(n => n.tetrahedra.HasFace(t) ? node : n).ToList();
+        if (!node.HasFacet(t)) return;
+        neighbor = neighbor.Select(n => n.HasFacet(t) ? node : n).ToList();
     }
 
     public DN GetFacingNode(Triangle t) {
-        if (tetrahedra.HasFace(t) == false) return null;
-        return neighbor.Find(n => n.tetrahedra.HasFace(t));
+        if (!HasFacet(t)) return null;
+        return neighbor.Find(n => n.HasFacet(t));
     }
 }
 
@@ -130,21 +132,8 @@ public class Voronoi3D {
         this.delaunaies = delaunaies;
         segments = new List<Segment>();
         foreach (var d in delaunaies) {
-            var c0 = d.tetrahedra.GetCircumscribedSphere(1e-15d).center;
-            //c0 = new double3(
-            //    math.saturate(c0.x),
-            //    math.saturate(c0.y),
-            //    math.saturate(c0.z)
-            //);
-            d.neighbor.ForEach(n => {
-                var c1 = n.tetrahedra.GetCircumscribedSphere(1e-15d).center;
-                //c1 = new double3(
-                //    math.saturate(c1.x),
-                //    math.saturate(c1.y),
-                //    math.saturate(c1.z)
-                //);
-                segments.Add(new Segment(c0, c1));
-            });
+            var c0 = d.tetrahedra.circumscribedSphere.center;
+            d.neighbor.ForEach(n => segments.Add(new Segment(c0, n.tetrahedra.circumscribedSphere.center)));
         }
     }
 }
