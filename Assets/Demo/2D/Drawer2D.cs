@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using kmty.geom.d2;
+using kmty.geom.d2.delaunay;
 using static Unity.Mathematics.math;
-using DN = DelaunayGraphNode2D;
-using VG = VoronoiGraph2D;
+using DN = kmty.geom.d2.delaunay.DelaunayGraphNode2D;
+using VG = kmty.geom.d2.delaunay.VoronoiGraph2D;
 
 public class Drawer2D : MonoBehaviour {
     public Material mat;
@@ -16,7 +17,6 @@ public class Drawer2D : MonoBehaviour {
     BistellarFlip2D bf;
     VG voronoi;
     DN[] nodes;
-    GameObject[] gos;
 
     void Init() {
         bf = new BistellarFlip2D(numPoint);
