@@ -7,7 +7,6 @@ using UnityEngine.TestTools;
 using kmty.geom.d3;
 using old;
 
-[System.Serializable]
 public class Test3D {
     static int[] nums = {1, 2, 5, 10, 20};
 

@@ -65,22 +65,22 @@ namespace kmty.geom.d2.delaunay_alt {
             var _pair = _this.GetFacingNode(e);
             if (_pair != null) {
                 this.neighbor.Add(_pair);
-                _pair.SetFacingNode(e, this);
+                _pair.ReplaceFacingNode(e, this);
             }
         }
 
-        void SetNeighbors(DN tgt, V2 p1, V2 p2) {
+        void SetNeighbors(DN trgt, V2 p1, V2 p2) {
             var edge = new SG(p1, p2);
             var pair = GetFacingNode(edge);
             if (pair != null) {
-                tgt.neighbor.Add(pair);
-                neighbor.ForEach(n => { if (n.Contains(edge)) n.SetFacingNode(edge, tgt); });
+                trgt.neighbor.Add(pair);
+                pair.ReplaceFacingNode(edge, trgt);
             }
         }
 
-        void SetFacingNode(SG e, DN node) {
-            if (!node.Contains(e)) return;
-            neighbor = neighbor.Select(n => n.Contains(e) ? node : n).ToList();
+        void ReplaceFacingNode(SG e, DN replacer) {
+            if (!replacer.Contains(e)) return;
+            neighbor = neighbor.Select(n => n.Contains(e) ? replacer : n).ToList();
         }
         public DN GetFacingNode(float2 a, float2 b) => GetFacingNode(new SG(a, b));
         public DN GetFacingNode(SG e) {
@@ -102,7 +102,6 @@ namespace kmty.geom.d2.delaunay_alt {
 
         void Split(float2 p) {
             var n = nodes.Find(_t => _t.triangle.Includes(p, true));
-            var t = n.triangle;
             var o = DN.Split(n, p);
             nodes.Remove(n);
             nodes.Add(o.n1);
