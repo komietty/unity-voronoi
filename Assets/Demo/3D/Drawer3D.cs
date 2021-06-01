@@ -3,7 +3,9 @@ using kmty.geom.d3;
 using Unity.Mathematics;
 using UR = UnityEngine.Random;
 
-namespace old {
+namespace kmty.geom.d3.delauney_alt {
+    using d3 = double3;
+    using f3 = float3;
     public class Drawer3D : MonoBehaviour {
 
         public Material mat;
@@ -26,8 +28,8 @@ namespace old {
 
 
         void Init() {
-            bf = new BistellarFlip3D(numPoint, seed);
-            nodes = bf.GetResult().ToArray();
+            bf = new BistellarFlip3D(numPoint);
+            nodes = bf.Nodes.ToArray();
             voronoi = new Voronoi3D(nodes);
         }
 
@@ -35,11 +37,6 @@ namespace old {
         void Update() {
             debugNodeId = Mathf.Clamp(debugNodeId, 0, nodes.Length - 1);
             if (Input.GetKeyDown(reset)) Init();
-            if (Input.GetKeyDown(add)) {
-                bf.Loop(new double3(UR.value, UR.value, UR.value));
-                nodes = bf.GetResult().ToArray();
-                voronoi = new Voronoi3D(nodes);
-            }
             if (Input.GetKeyDown(toggle)) showVoronoi = !showVoronoi;
         }
 
@@ -88,8 +85,8 @@ namespace old {
         }
 
         void DrawCircumscribedSphere(Sphere s) {
-            Gizmos.DrawWireSphere((float3)s.center, (float)s.radius);
-            Gizmos.DrawCube((float3)s.center, Vector3.one * 0.1f);
+            Gizmos.DrawWireSphere((f3)s.center, (float)s.radius);
+            Gizmos.DrawCube((f3)s.center, Vector3.one * 0.1f);
         }
 
         void DrawVoronoi() {
@@ -97,9 +94,8 @@ namespace old {
             GL.Begin(GL.LINES);
             foreach (var s in voronoi.segments) {
                 mat.SetPass(0);
-                GL.Vertex((float3)s.a);
-                GL.Vertex((float3)s.b);
-
+                GL.Vertex((f3)s.a);
+                GL.Vertex((f3)s.b);
             }
             GL.End();
             GL.PopMatrix();
@@ -107,28 +103,28 @@ namespace old {
 
         void DrawTetrahedra(Tetrahedra t, int pass) {
             mat.SetPass(pass);
-            GL.Begin(GL.LINE_STRIP); GL.Vertex((float3)t.a); GL.Vertex((float3)t.b); GL.Vertex((float3)t.c); GL.End();
-            GL.Begin(GL.LINE_STRIP); GL.Vertex((float3)t.a); GL.Vertex((float3)t.c); GL.Vertex((float3)t.d); GL.End();
-            GL.Begin(GL.LINE_STRIP); GL.Vertex((float3)t.a); GL.Vertex((float3)t.d); GL.Vertex((float3)t.b); GL.End();
+            GL.Begin(GL.LINE_STRIP); GL.Vertex((f3)t.a); GL.Vertex((f3)t.b); GL.Vertex((f3)t.c); GL.End();
+            GL.Begin(GL.LINE_STRIP); GL.Vertex((f3)t.a); GL.Vertex((f3)t.c); GL.Vertex((f3)t.d); GL.End();
+            GL.Begin(GL.LINE_STRIP); GL.Vertex((f3)t.a); GL.Vertex((f3)t.d); GL.Vertex((f3)t.b); GL.End();
         }
 
         void DrawTetrahedraSpecifid(Tetrahedra t, int pass) {
             mat.SetPass(pass);
             GL.Begin(GL.TRIANGLES);
-            GL.Vertex((float3)t.a); GL.Vertex((float3)t.b); GL.Vertex((float3)t.c);
-            GL.Vertex((float3)t.b); GL.Vertex((float3)t.c); GL.Vertex((float3)t.d);
-            GL.Vertex((float3)t.c); GL.Vertex((float3)t.d); GL.Vertex((float3)t.a);
-            GL.Vertex((float3)t.d); GL.Vertex((float3)t.a); GL.Vertex((float3)t.b);
+            GL.Vertex((f3)t.a); GL.Vertex((f3)t.b); GL.Vertex((f3)t.c);
+            GL.Vertex((f3)t.b); GL.Vertex((f3)t.c); GL.Vertex((f3)t.d);
+            GL.Vertex((f3)t.c); GL.Vertex((f3)t.d); GL.Vertex((f3)t.a);
+            GL.Vertex((f3)t.d); GL.Vertex((f3)t.a); GL.Vertex((f3)t.b);
             GL.End();
         }
 
         void DrawUnitCube() {
             GL.PushMatrix();
             mat.SetPass(0);
-            GL.Begin(GL.LINE_STRIP); GL.Vertex(new float3(1, 0, 0)); GL.Vertex(new float3(0, 0, 0)); GL.Vertex(new float3(0, 1, 0)); GL.Vertex(new float3(1, 1, 0)); GL.End();
-            GL.Begin(GL.LINE_STRIP); GL.Vertex(new float3(1, 0, 1)); GL.Vertex(new float3(1, 0, 0)); GL.Vertex(new float3(1, 1, 0)); GL.Vertex(new float3(1, 1, 1)); GL.End();
-            GL.Begin(GL.LINE_STRIP); GL.Vertex(new float3(0, 0, 1)); GL.Vertex(new float3(1, 0, 1)); GL.Vertex(new float3(1, 1, 1)); GL.Vertex(new float3(0, 1, 1)); GL.End();
-            GL.Begin(GL.LINE_STRIP); GL.Vertex(new float3(0, 0, 0)); GL.Vertex(new float3(0, 0, 1)); GL.Vertex(new float3(0, 1, 1)); GL.Vertex(new float3(0, 1, 0)); GL.End();
+            GL.Begin(GL.LINE_STRIP); GL.Vertex(new f3(1, 0, 0)); GL.Vertex(new f3(0, 0, 0)); GL.Vertex(new f3(0, 1, 0)); GL.Vertex(new f3(1, 1, 0)); GL.End();
+            GL.Begin(GL.LINE_STRIP); GL.Vertex(new f3(1, 0, 1)); GL.Vertex(new f3(1, 0, 0)); GL.Vertex(new f3(1, 1, 0)); GL.Vertex(new f3(1, 1, 1)); GL.End();
+            GL.Begin(GL.LINE_STRIP); GL.Vertex(new f3(0, 0, 1)); GL.Vertex(new f3(1, 0, 1)); GL.Vertex(new f3(1, 1, 1)); GL.Vertex(new f3(0, 1, 1)); GL.End();
+            GL.Begin(GL.LINE_STRIP); GL.Vertex(new f3(0, 0, 0)); GL.Vertex(new f3(0, 0, 1)); GL.Vertex(new f3(0, 1, 1)); GL.Vertex(new f3(0, 1, 0)); GL.End();
             GL.PopMatrix();
         }
     }

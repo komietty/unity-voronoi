@@ -47,7 +47,8 @@ namespace old {
                 // if p - q intersects the triangle, flip 23 
                 // if not, find third tet, and execute flip 32 
                 // find intersect point r with plane and p-q, then find far point from distance 
-                if (t.Intersects(new Segment(p, q - p), out double3 i, out bool isOnEdge)) {
+                //if (t.Intersects(new Segment(p, q - p), out double3 i, out bool isOnEdge)) {
+                if (t.Intersects(new Segment(p, q), out double3 i, out bool isOnEdge)) {
                     n.Flip23(pair, t, p, q);
                     n.children.ForEach(_n => Leagalize(_n, new Triangle(q, a, b), p));
                     n.children.ForEach(_n => Leagalize(_n, new Triangle(q, b, c), p));

@@ -10,6 +10,7 @@ namespace kmty.geom.d3.delauney_alt {
     using DN = DelaunayGraphNode3D;
     using UR = UnityEngine.Random;
     using TR = Triangle;
+    using SG = Segment;
     using d3 = double3;
 
     public class DelaunayGraphNode3D {
@@ -41,77 +42,50 @@ namespace kmty.geom.d3.delauney_alt {
             return (abc.t, bcd.t, cda.t, dab.t, abc.n, bcd.n, cda.n, dab.n);
         }
 
-        public (TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2, DN n3) Flip23(DN pair, TR tri, d3 p_this, d3 p_pair) {
-            var nab = new DN(p_this, p_pair, tri.a, tri.b);
-            var nbc = new DN(p_this, p_pair, tri.b, tri.c);
-            var nca = new DN(p_this, p_pair, tri.c, tri.a);
-
+        public static (TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2, DN n3) Flip23(DN n1, DN n2, d3 p1, d3 p2, TR t) {
+            DN nab = new DN(p1, p2, t.a, t.b);
+            DN nbc = new DN(p1, p2, t.b, t.c);
+            DN nca = new DN(p1, p2, t.c, t.a);
             nab.neighbor = new List<DN> { nbc, nca };
             nbc.neighbor = new List<DN> { nca, nab };
             nca.neighbor = new List<DN> { nab, nbc };
-
-            var t_ab_this = new TR(tri.a, tri.b, p_this);
-            var t_ab_pair = new TR(tri.a, tri.b, p_pair);
-            var t_bc_this = new TR(tri.b, tri.c, p_this);
-            var t_bc_pair = new TR(tri.b, tri.c, p_pair);
-            var t_ca_this = new TR(tri.c, tri.a, p_this);
-            var t_ca_pair = new TR(tri.c, tri.a, p_pair);
-
-            this.SetNeighbor(nab, t_ab_this);
-            pair.SetNeighbor(nab, t_ab_pair);
-            this.SetNeighbor(nbc, t_bc_this);
-            pair.SetNeighbor(nbc, t_bc_pair);
-            this.SetNeighbor(nca, t_ca_this);
-            pair.SetNeighbor(nca, t_ca_pair);
-
-            return (
-                t_ab_this, t_ab_pair,
-                t_bc_this, t_bc_pair,
-                t_ca_this, t_ca_pair,
-                nab, nbc, nca );
+            TR t_ab_p1 = new TR(t.a, t.b, p1); n1.SetNeighbor(nab, t_ab_p1);
+            TR t_ab_p2 = new TR(t.a, t.b, p2); n2.SetNeighbor(nab, t_ab_p2);
+            TR t_bc_p1 = new TR(t.b, t.c, p1); n1.SetNeighbor(nbc, t_bc_p1);
+            TR t_bc_p2 = new TR(t.b, t.c, p2); n2.SetNeighbor(nbc, t_bc_p2);
+            TR t_ca_p1 = new TR(t.c, t.a, p1); n1.SetNeighbor(nca, t_ca_p1);
+            TR t_ca_p2 = new TR(t.c, t.a, p2); n2.SetNeighbor(nca, t_ca_p2);
+            return (t_ab_p1, t_ab_p2, t_bc_p1, t_bc_p2, t_ca_p1, t_ca_p2, nab, nbc, nca);
         }
 
-        public (bool f, TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2) Flip32(DN pair0, TR tri, d3 p_this, d3 p_pair, d3 p_away) {
-            var edge = tri.Remaining(p_away);
-            var pair1 = GetFacingNode(new TR(edge.a, edge.b, p_this));
-            var pair2 = GetFacingNode(new TR(edge.a, edge.b, p_pair));
-            if (pair1 == null || pair2 == null) { throw new Exception(); }
+        public static (TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2) Flip32(DN n1, DN n2, DN n3, TR t, d3 apex_x, d3 apex_y) {
+            DN nx = new DN(t.a, t.b, t.c, apex_x);
+            DN ny = new DN(t.a, t.b, t.c, apex_y);
+            nx.neighbor = new List<DN> { ny };
+            ny.neighbor = new List<DN> { nx };
 
-            if (!Equals(pair1.tetrahedra.RemainingPoint(new TR(edge.a, edge.b, p_this)), p_pair)) {
-                Debug.Log("flip32 passed!");
-                return (false, default, default, default, default, default, default, default, default);
-            }
+            TR xab = new TR(apex_x, t.a, t.b);
+            TR yab = new TR(apex_y, t.a, t.b);
+            TR xbc = new TR(apex_x, t.b, t.c);
+            TR ybc = new TR(apex_y, t.b, t.c);
+            TR xca = new TR(apex_x, t.c, t.a);
+            TR yca = new TR(apex_y, t.c, t.a);
 
-            var na = new DN(p_this, p_pair, p_away, edge.a);
-            var nb = new DN(p_this, p_pair, p_away, edge.b);
-            na.neighbor = new List<DN> { nb };
-            nb.neighbor = new List<DN> { na };
+            n1.SetNeighbor(nx, xab); n1.SetNeighbor(nx, xbc); n1.SetNeighbor(nx, xca);
+            n2.SetNeighbor(nx, xab); n2.SetNeighbor(nx, xbc); n2.SetNeighbor(nx, xca);
+            n3.SetNeighbor(nx, xab); n3.SetNeighbor(nx, xbc); n3.SetNeighbor(nx, xca);
 
-            // double check!
-            var a_this_pair = new TR(edge.a, p_this, p_pair);
-            var a_pair_away = new TR(edge.a, p_pair, p_away);
-            var a_away_this = new TR(edge.a, p_away, p_this);
-            var b_this_pair = new TR(edge.b, p_this, p_pair);
-            var b_pair_away = new TR(edge.b, p_pair, p_away);
-            var b_away_this = new TR(edge.b, p_away, p_this);
+            n1.SetNeighbor(ny, yab); n1.SetNeighbor(ny, ybc); n1.SetNeighbor(ny, yca);
+            n2.SetNeighbor(ny, yab); n2.SetNeighbor(ny, ybc); n2.SetNeighbor(ny, yca);
+            n3.SetNeighbor(ny, yab); n3.SetNeighbor(ny, ybc); n3.SetNeighbor(ny, yca);
 
-            this .SetNeighbor(na, a_away_this); // except pointPair => search from this
-            pair0.SetNeighbor(na, a_pair_away); // except pointThis => search from pair0
-            pair1.SetNeighbor(na, a_this_pair); // except pointAway => search from pair1
-            this .SetNeighbor(nb, b_away_this); // except pointPair => search from this
-            pair0.SetNeighbor(nb, b_pair_away); // except pointThis => search from pair0
-            pair1.SetNeighbor(nb, b_this_pair); // except pointAway => search from pair1
-
-            return (
-                true,
-                a_this_pair, a_pair_away, a_away_this,
-                b_this_pair, b_pair_away, b_away_this,
-                na, nb);
+            return (xab, xbc, xca, yab, ybc, yca, nx, ny);
         }
 
         void SetNeighbor(DN n, TR t) {
             var pair = GetFacingNode(t);
             if (pair != null) {
+                if (n.neighbor.Count > 4) Debug.LogWarning("over 4!");
                 n.neighbor.Add(pair);
                 pair.ReplaceFacingNode(t, n);
             }
@@ -122,11 +96,27 @@ namespace kmty.geom.d3.delauney_alt {
             neighbor = neighbor.Select(n => n.HasFacet(t) ? replacer : n).ToList();
         }
 
-        DN GetFacingNode(TR t) {
+        public DN GetFacingNode(TR t) {
             if (!HasFacet(t)) return null;
             return neighbor.Find(n => n.HasFacet(t));
         }
     }
+
+
+    public class Voronoi3D {
+        public DN[] delaunaies;
+        public List<SG> segments;
+
+        public Voronoi3D(DN[] delaunaies) {
+            this.delaunaies = delaunaies;
+            segments = new List<SG>();
+            foreach (var d in delaunaies) {
+                var c0 = d.tetrahedra.circumscribedSphere.center;
+                d.neighbor.ForEach(n => segments.Add(new SG(c0, n.tetrahedra.circumscribedSphere.center)));
+            }
+        }
+    }
+
     public class BistellarFlip3D {
         protected Stack<TR> stack;
         protected List<DN> nodes;
@@ -154,12 +144,56 @@ namespace kmty.geom.d3.delauney_alt {
 
         void Leagalize() { 
             while (stack.Count > 0) {
-                var s = stack.Pop();
-                if (FindNodes(s, out DN n1, out DN n2)) {
+                var t = stack.Pop();
+                if (FindNodes(t, out DN n1, out DN n2)) {
+                    var p1 = n1.tetrahedra.RemainingPoint(t);
+                    var p2 = n2.tetrahedra.RemainingPoint(t);
+                    if (n1.tetrahedra.circumscribedSphere.Contains(p2) ||
+                        n2.tetrahedra.circumscribedSphere.Contains(p1)) {
+                        if (t.Intersects(new SG(p1, p2), out d3 i, out bool isOnEdge)) {
+                            var o = DN.Flip23(n1, n2, p1, p2, t);
+                            stack.Push(o.t1);
+                            stack.Push(o.t2);
+                            stack.Push(o.t3);
+                            stack.Push(o.t4);
+                            stack.Push(o.t5);
+                            stack.Push(o.t6);
+                            nodes.Remove(n1);
+                            nodes.Remove(n2);
+                            nodes.Add(o.n1);
+                            nodes.Add(o.n2);
+                            nodes.Add(o.n3);
+                        } else if (isOnEdge) { Debug.LogWarning("point is on edge");
+                        } else {
+                            d3 far;
+                            if      (Util3D.IsIntersecting(new SG(i, t.a), new SG(t.b, t.c), 1e-15d)) far = t.a;
+                            else if (Util3D.IsIntersecting(new SG(i, t.b), new SG(t.c, t.a), 1e-15d)) far = t.b;
+                            else if (Util3D.IsIntersecting(new SG(i, t.c), new SG(t.a, t.b), 1e-15d)) far = t.c;
+                            else    throw new Exception();
+
+                            var cm = t.Remaining(far);
+                            var t3 = new TR(cm, p1); 
+                            var n3 = n1.GetFacingNode(t3);
+
+                            if (!Equals(n3.tetrahedra.RemainingPoint(t3), p2)) continue;
+
+                            var o = DN.Flip32(n1, n2, n3, new TR(p1, p2, far), cm.a, cm.b);
+                            stack.Push(o.t1);
+                            stack.Push(o.t2);
+                            stack.Push(o.t3);
+                            stack.Push(o.t4);
+                            stack.Push(o.t5);
+                            stack.Push(o.t6);
+                            nodes.Remove(n1);
+                            nodes.Remove(n2);
+                            nodes.Remove(n3);
+                            nodes.Add(o.n1);
+                            nodes.Add(o.n2);
+                        }
+                    }
                 }
             }
         }
-
 
         bool FindNodes(TR t, out DN n1, out DN n2) {
             var o = nodes.FindAll(n => n.tetrahedra.HasFace(t));

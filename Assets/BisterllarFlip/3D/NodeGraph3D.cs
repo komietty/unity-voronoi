@@ -112,10 +112,9 @@ namespace old {
             }
         }
 
-        // is this really correct??? look up 2d version
         public void SetFacingNode(Triangle t, DN node) {
             if (!node.HasFacet(t)) return;
-            neighbor = node.neighbor.Select(n => n.HasFacet(t) ? node : n).ToList();
+            neighbor = neighbor.Select(n => n.HasFacet(t) ? node : n).ToList();
         }
 
         public DN GetFacingNode(Triangle t) {
