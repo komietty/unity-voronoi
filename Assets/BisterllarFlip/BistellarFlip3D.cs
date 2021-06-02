@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Unity.Mathematics;
-using static Unity.Mathematics.math;
 
-namespace kmty.geom.d3.delauney_alt {
+namespace kmty.geom.d3.delauney {
     using DN = DelaunayGraphNode3D;
     using UR = UnityEngine.Random;
     using TR = Triangle;
@@ -19,7 +18,7 @@ namespace kmty.geom.d3.delauney_alt {
         public bool Contains(d3 p, bool inclusive) => tetrahedra.Contains(p, inclusive);
         public bool HasFacet(TR t) => tetrahedra.HasFace(t);
 
-        public DelaunayGraphNode3D(TR t, d3 d) : this(t.a, t.b, t.c, d) { }
+        public DelaunayGraphNode3D(Tetrahedra t) : this(t.a, t.b, t.c, t.d) { }
         public DelaunayGraphNode3D(d3 a, d3 b, d3 c, d3 d) {
             tetrahedra = new Tetrahedra(a, b, c, d);
             neighbor = new List<DN>();
@@ -42,7 +41,8 @@ namespace kmty.geom.d3.delauney_alt {
             return (abc.t, bcd.t, cda.t, dab.t, abc.n, bcd.n, cda.n, dab.n);
         }
 
-        public static (TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2, DN n3) Flip23(DN n1, DN n2, d3 p1, d3 p2, TR t) {
+        public static (TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2, DN n3)
+            Flip23(DN n1, DN n2, d3 p1, d3 p2, TR t) {
             DN nab = new DN(p1, p2, t.a, t.b);
             DN nbc = new DN(p1, p2, t.b, t.c);
             DN nca = new DN(p1, p2, t.c, t.a);
@@ -58,34 +58,30 @@ namespace kmty.geom.d3.delauney_alt {
             return (t_ab_p1, t_ab_p2, t_bc_p1, t_bc_p2, t_ca_p1, t_ca_p2, nab, nbc, nca);
         }
 
-        public static (TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2) Flip32(DN n1, DN n2, DN n3, TR t, d3 apex_x, d3 apex_y) {
+        public static (TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2)
+            Flip32(DN n1, DN n2, DN n3, TR t, d3 apex_x, d3 apex_y) {
             DN nx = new DN(t.a, t.b, t.c, apex_x);
             DN ny = new DN(t.a, t.b, t.c, apex_y);
             nx.neighbor = new List<DN> { ny };
             ny.neighbor = new List<DN> { nx };
-
             TR xab = new TR(apex_x, t.a, t.b);
             TR yab = new TR(apex_y, t.a, t.b);
             TR xbc = new TR(apex_x, t.b, t.c);
             TR ybc = new TR(apex_y, t.b, t.c);
             TR xca = new TR(apex_x, t.c, t.a);
             TR yca = new TR(apex_y, t.c, t.a);
-
             n1.SetNeighbor(nx, xab); n1.SetNeighbor(nx, xbc); n1.SetNeighbor(nx, xca);
             n2.SetNeighbor(nx, xab); n2.SetNeighbor(nx, xbc); n2.SetNeighbor(nx, xca);
             n3.SetNeighbor(nx, xab); n3.SetNeighbor(nx, xbc); n3.SetNeighbor(nx, xca);
-
             n1.SetNeighbor(ny, yab); n1.SetNeighbor(ny, ybc); n1.SetNeighbor(ny, yca);
             n2.SetNeighbor(ny, yab); n2.SetNeighbor(ny, ybc); n2.SetNeighbor(ny, yca);
             n3.SetNeighbor(ny, yab); n3.SetNeighbor(ny, ybc); n3.SetNeighbor(ny, yca);
-
             return (xab, xbc, xca, yab, ybc, yca, nx, ny);
         }
 
         void SetNeighbor(DN n, TR t) {
             var pair = GetFacingNode(t);
             if (pair != null) {
-                if (n.neighbor.Count > 4) Debug.LogWarning("over 4!");
                 n.neighbor.Add(pair);
                 pair.ReplaceFacingNode(t, n);
             }
@@ -102,30 +98,23 @@ namespace kmty.geom.d3.delauney_alt {
         }
     }
 
-
-    public class Voronoi3D {
-        public DN[] delaunaies;
-        public List<SG> segments;
-
-        public Voronoi3D(DN[] delaunaies) {
-            this.delaunaies = delaunaies;
-            segments = new List<SG>();
-            foreach (var d in delaunaies) {
-                var c0 = d.tetrahedra.circumscribedSphere.center;
-                d.neighbor.ForEach(n => segments.Add(new SG(c0, n.tetrahedra.circumscribedSphere.center)));
-            }
-        }
-    }
-
     public class BistellarFlip3D {
         protected Stack<TR> stack;
         protected List<DN> nodes;
+        protected Tetrahedra root; 
         public List<DN> Nodes => nodes;
 
         public BistellarFlip3D(int num) {
             stack = new Stack<TR>();
-            nodes = new List<DN> { new DN(new d3(0, 0, 0), new d3(3, 0, 0), new d3(0, 3, 0), new d3(0, 0, 3)) };
+            root  = new Tetrahedra(new d3(0, 0, 0), new d3(3, 0, 0), new d3(0, 3, 0), new d3(0, 0, 3));
+            nodes = new List<DN> { new DN(root) };
             for (var i = 0; i < num; i++) { Split(new d3(UR.value, UR.value, UR.value)); Leagalize(); }
+            //nodes = nodes.Where(n => 
+            //        !n.tetrahedra.HasPoint(root.a) &&
+            //        !n.tetrahedra.HasPoint(root.b) &&
+            //        !n.tetrahedra.HasPoint(root.c) &&
+            //        !n.tetrahedra.HasPoint(root.d)
+            //        ).ToList();
         }
 
         void Split(d3 p) { 
@@ -200,6 +189,20 @@ namespace kmty.geom.d3.delauney_alt {
             if (o.Count == 2) { n1 = o[0]; n2 = o[1]; return true; } 
             else              { n1 = n2 = default;   return false; }
         }
-
     }
+
+    public class Voronoi3D {
+        public DN[] delaunaies;
+        public List<SG> segments;
+
+        public Voronoi3D(DN[] delaunaies) {
+            this.delaunaies = delaunaies;
+            segments = new List<SG>();
+            foreach (var d in delaunaies) {
+                var c0 = d.tetrahedra.circumscribedSphere.center;
+                d.neighbor.ForEach(n => segments.Add(new SG(c0, n.tetrahedra.circumscribedSphere.center)));
+            }
+        }
+    }
+
 }

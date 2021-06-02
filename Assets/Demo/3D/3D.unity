@@ -288,16 +288,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mat: {fileID: 2100000, guid: f1b1a7f366a0b4644a18e06f36fa4115, type: 2}
-  numPoint: 10
+  numPoint: 50
   seed: 0
   reset: 114
   add: 97
   toggle: 116
   showDebugCube: 0
   showSphere: 0
-  showDebugNode: 1
+  showDebugNode: 0
   showDebugNeighbor: 0
-  showOthers: 0
+  showOthers: 1
   showVoronoi: 0
   debugNodeId: 0
 --- !u!4 &1349591346

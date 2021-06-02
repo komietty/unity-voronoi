@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mat: {fileID: 2100000, guid: 6c56a8b2b6e8c2747a5265d114efbab9, type: 2}
   mat2: {fileID: 2100000, guid: e18e423e53804534aaf1b8e963260683, type: 2}
-  numPoint: 1
+  numPoint: 10
   reset: 114
   createMesh: 1
   drawCirlcle: 0

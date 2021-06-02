@@ -6,7 +6,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-namespace kmty.geom.d2.delaunay_alt {
+namespace kmty.geom.d2.delaunay {
     using DN = DelaunayGraphNode2D;
     using VN = VoronoiGraphNode2D;
     using UR = UnityEngine.Random;

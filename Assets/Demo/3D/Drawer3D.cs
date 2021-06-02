@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using kmty.geom.d3;
 using Unity.Mathematics;
-using UR = UnityEngine.Random;
 
-namespace kmty.geom.d3.delauney_alt {
+namespace kmty.geom.d3.delauney {
     using d3 = double3;
     using f3 = float3;
     public class Drawer3D : MonoBehaviour {

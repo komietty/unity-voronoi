@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using kmty.geom.d2;
 
-namespace kmty.geom.d2.delaunay_alt {
+namespace kmty.geom.d2.delaunay {
     public class Test2D {
-        static int[] nums = { 1, 2, 5, 10, 20 };
+        static int[] nums = { 1, 2, 3, 5, 10, 20, 30 };
 
         [Test]
         public void DelaunayTrianglesTest([ValueSource(nameof(nums))] int num) {
             var bf = new BistellarFlip2D(num);
-            var ns = bf.Nodes;
-            //var ns = bf.GetResult(); 
-            foreach (var n in ns) {
+            foreach (var n in bf.Nodes) {
                 var t = n.triangle;
                 var c = n.triangle.circumscribedCircle;
                 var ab = new Segment(t.a, t.b);
