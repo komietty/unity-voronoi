@@ -1,16 +1,20 @@
 # unity-drauney-triangulation
-2D and 3D drauney triangulation module with bistellar flip method.  
-3D version does not works and yet not resolved. Please PR me if you could solve errors (or issue is welcome as well).
+2D and 3D drauney triangulation module with bistellar flip method.
 
-<img src="Imgs/Capture.PNG" width=50%>
+With this easily created Volonoi diagram.
+
+### 2D version
+
+<img src="Imgs/delaunay2D.PNG" width=50%>
+
+
+### 3D version
+
+<img src="Imgs/delaunay3D.PNG" width=50%>
 
 ## Usage
 
 using a [simplex geom submodule](https://github.com/komietty/unity-simplex-geometry), so update submodule first.
-
-## Compatibility
-
-Tested on Unity 2019.3.11f1, windows10 (RTX 2080 max-q).
 
 ## reference
 

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 namespace kmty.geom.d3.delauney {
     using DN = DelaunayGraphNode3D;
+    using VN = VoronoiGraphNode3D;
     using UR = UnityEngine.Random;
     using TR = Triangle;
     using SG = Segment;
@@ -101,23 +103,23 @@ namespace kmty.geom.d3.delauney {
     public class BistellarFlip3D {
         protected Stack<TR> stack;
         protected List<DN> nodes;
-        protected Tetrahedra root; 
+        protected Tetrahedra root;
         public List<DN> Nodes => nodes;
 
         public BistellarFlip3D(int num) {
             stack = new Stack<TR>();
-            root  = new Tetrahedra(new d3(0, 0, 0), new d3(3, 0, 0), new d3(0, 3, 0), new d3(0, 0, 3));
+            root = new Tetrahedra(new d3(0, 0, 0), new d3(3, 0, 0), new d3(0, 3, 0), new d3(0, 0, 3));
             nodes = new List<DN> { new DN(root) };
             for (var i = 0; i < num; i++) { Split(new d3(UR.value, UR.value, UR.value)); Leagalize(); }
-            //nodes = nodes.Where(n => 
-            //        !n.tetrahedra.HasPoint(root.a) &&
-            //        !n.tetrahedra.HasPoint(root.b) &&
-            //        !n.tetrahedra.HasPoint(root.c) &&
-            //        !n.tetrahedra.HasPoint(root.d)
-            //        ).ToList();
+            nodes = nodes.Where(n => 
+                    !n.tetrahedra.HasPoint(root.a) &&
+                    !n.tetrahedra.HasPoint(root.b) &&
+                    !n.tetrahedra.HasPoint(root.c) &&
+                    !n.tetrahedra.HasPoint(root.d)
+                    ).ToList();
         }
 
-        void Split(d3 p) { 
+        void Split(d3 p) {
             var n = nodes.Find(_t => _t.tetrahedra.Contains(p, true));
             var o = n.Split(p);
             nodes.Remove(n);
@@ -131,7 +133,7 @@ namespace kmty.geom.d3.delauney {
             stack.Push(o.t4);
         }
 
-        void Leagalize() { 
+        void Leagalize() {
             while (stack.Count > 0) {
                 var t = stack.Pop();
                 if (FindNodes(t, out DN n1, out DN n2)) {
@@ -155,13 +157,13 @@ namespace kmty.geom.d3.delauney {
                         } else if (isOnEdge) { Debug.LogWarning("point is on edge");
                         } else {
                             d3 far;
-                            if      (Util3D.IsIntersecting(new SG(i, t.a), new SG(t.b, t.c), 1e-15d)) far = t.a;
+                            if (Util3D.IsIntersecting(new SG(i, t.a), new SG(t.b, t.c), 1e-15d)) far = t.a;
                             else if (Util3D.IsIntersecting(new SG(i, t.b), new SG(t.c, t.a), 1e-15d)) far = t.b;
                             else if (Util3D.IsIntersecting(new SG(i, t.c), new SG(t.a, t.b), 1e-15d)) far = t.c;
-                            else    throw new Exception();
+                            else throw new Exception();
 
                             var cm = t.Remaining(far);
-                            var t3 = new TR(cm, p1); 
+                            var t3 = new TR(cm, p1);
                             var n3 = n1.GetFacingNode(t3);
 
                             if (!Equals(n3.tetrahedra.RemainingPoint(t3), p2)) continue;
@@ -186,17 +188,15 @@ namespace kmty.geom.d3.delauney {
 
         bool FindNodes(TR t, out DN n1, out DN n2) {
             var o = nodes.FindAll(n => n.tetrahedra.HasFace(t));
-            if (o.Count == 2) { n1 = o[0]; n2 = o[1]; return true; } 
-            else              { n1 = n2 = default;   return false; }
+            if (o.Count == 2) { n1 = o[0]; n2 = o[1]; return true; } else { n1 = n2 = default; return false; }
         }
     }
 
-    public class Voronoi3D {
+    public class VoronoiTestViewer {
         public DN[] delaunaies;
         public List<SG> segments;
-
-        public Voronoi3D(DN[] delaunaies) {
-            this.delaunaies = delaunaies;
+        public VoronoiTestViewer(DN[] dns) {
+            this.delaunaies = dns;
             segments = new List<SG>();
             foreach (var d in delaunaies) {
                 var c0 = d.tetrahedra.circumscribedSphere.center;
@@ -205,4 +205,35 @@ namespace kmty.geom.d3.delauney {
         }
     }
 
+
+    public class VoronoiGraph3D {
+        public Dictionary<d3, VN> nodes;
+
+        public VoronoiGraph3D(DN[] dns) {
+            nodes = new Dictionary<d3, VN>();
+            foreach (var d in dns) {
+                var t0 = d.tetrahedra;
+                var c0 = t0.circumscribedSphere.center;
+                if (!nodes.ContainsKey(t0.a)) nodes.Add(t0.a, new VN(t0.a));
+                if (!nodes.ContainsKey(t0.b)) nodes.Add(t0.b, new VN(t0.b));
+                if (!nodes.ContainsKey(t0.c)) nodes.Add(t0.c, new VN(t0.c));
+                if (!nodes.ContainsKey(t0.d)) nodes.Add(t0.d, new VN(t0.d));
+                d.neighbor.ForEach(n => {
+                    var t1 = n.tetrahedra;
+                    var c1 = t1.circumscribedSphere.center;
+                });
+            }
+        }
+    }
+
+    public class VoronoiGraphNode3D {
+        public d3 center;
+        public List<SG> segments;
+        //public Mesh mesh;
+        public VoronoiGraphNode3D(d3 c) {
+            this.center = c;
+            this.segments = new List<SG>();
+        }
+        public void Meshilify() { }
+    }
 }

@@ -8,90 +8,49 @@ namespace kmty.geom.d3.delauney {
 
         public Material mat;
         public int numPoint;
-        public int seed;
         public KeyCode reset = KeyCode.R;
-        public KeyCode add = KeyCode.A;
-        public KeyCode toggle = KeyCode.T;
         public bool showDebugCube;
-        public bool showSphere;
-        public bool showDebugNode;
-        public bool showDebugNeighbor;
-        public bool showOthers;
         public bool showVoronoi;
         [Range(0, 100)] public int debugNodeId;
 
         BistellarFlip3D bf;
-        Voronoi3D voronoi;
+        VoronoiTestViewer voronoi;
         DelaunayGraphNode3D[] nodes;
 
 
         void Init() {
             bf = new BistellarFlip3D(numPoint);
             nodes = bf.Nodes.ToArray();
-            voronoi = new Voronoi3D(nodes);
+            voronoi = new VoronoiTestViewer(nodes);
         }
 
         void Start() { Init(); }
         void Update() {
             debugNodeId = Mathf.Clamp(debugNodeId, 0, nodes.Length - 1);
             if (Input.GetKeyDown(reset)) Init();
-            if (Input.GetKeyDown(toggle)) showVoronoi = !showVoronoi;
         }
 
         void OnRenderObject() {
-            GL.Clear(true, true, Color.clear);
             if (showDebugCube) DrawUnitCube();
             if (showVoronoi) DrawVoronoi();
             else DrawDelauney(nodes);
         }
 
-        void OnDrawGizmos() {
-            if (nodes == null) return;
-            for (int i = 0; i < nodes.Length; i++) {
-                var n = nodes[debugNodeId];
-                var t = n.tetrahedra;
-                if (showSphere) DrawCircumscribedSphere(t.circumscribedSphere);
-            }
-        }
-
         void DrawDelauney(DelaunayGraphNode3D[] nodes) {
             var n = nodes[debugNodeId];
             var t = n.tetrahedra;
-
-            if (showOthers) {
-                GL.PushMatrix();
-                for (int i = 0; i < nodes.Length; i++) {
-                    if (i != debugNodeId) DrawTetrahedra(nodes[i].tetrahedra, 0);
-                }
-                GL.PopMatrix();
-            }
-
-
             GL.PushMatrix();
-
-            if (showDebugNode)
-                DrawTetrahedraSpecifid(n.tetrahedra, 1);
-
-            n.neighbor.ForEach(nei => {
-                DrawTetrahedra(nei.tetrahedra, 4);
-                if (showDebugNeighbor) DrawTetrahedraSpecifid(nei.tetrahedra, 2);
-            });
-
-            DrawTetrahedra(t, 3);
-
+            foreach (var _n in nodes) DrawTetrahedra(_n.tetrahedra, 0);
+            n.neighbor.ForEach(_n => DrawTetrahedra(_n.tetrahedra, 4));
+            DrawTetrahedraSpecifid(t, 1);
             GL.PopMatrix();
-        }
-
-        void DrawCircumscribedSphere(Sphere s) {
-            Gizmos.DrawWireSphere((f3)s.center, (float)s.radius);
-            Gizmos.DrawCube((f3)s.center, Vector3.one * 0.1f);
         }
 
         void DrawVoronoi() {
             GL.PushMatrix();
             GL.Begin(GL.LINES);
             foreach (var s in voronoi.segments) {
-                mat.SetPass(0);
+                mat.SetPass(3);
                 GL.Vertex((f3)s.a);
                 GL.Vertex((f3)s.b);
             }

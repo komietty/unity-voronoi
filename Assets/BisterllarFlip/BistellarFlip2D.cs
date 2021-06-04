@@ -186,9 +186,9 @@ namespace kmty.geom.d2.delaunay {
                     var c1 = t1.circumscribedCenter;
                     var v1 = c1 - c0;
                     var th = 1e-5d;
-                    if (abs(dot(t0.b - t0.a, v1)) < th || abs(dot(t0.c - t0.a, v1)) < th) { nodes.TryGetValue(t0.a, out VN v); v?.segments.Add(new Segment(c0, c1)); }
-                    if (abs(dot(t0.c - t0.b, v1)) < th || abs(dot(t0.a - t0.b, v1)) < th) { nodes.TryGetValue(t0.b, out VN v); v?.segments.Add(new Segment(c0, c1)); }
-                    if (abs(dot(t0.a - t0.c, v1)) < th || abs(dot(t0.b - t0.c, v1)) < th) { nodes.TryGetValue(t0.c, out VN v); v?.segments.Add(new Segment(c0, c1)); }
+                    if (abs(dot(t0.b - t0.a, v1)) < th || abs(dot(t0.c - t0.a, v1)) < th) { nodes.TryGetValue(t0.a, out VN v); v?.segments.Add(new SG(c0, c1)); }
+                    if (abs(dot(t0.c - t0.b, v1)) < th || abs(dot(t0.a - t0.b, v1)) < th) { nodes.TryGetValue(t0.b, out VN v); v?.segments.Add(new SG(c0, c1)); }
+                    if (abs(dot(t0.a - t0.c, v1)) < th || abs(dot(t0.b - t0.c, v1)) < th) { nodes.TryGetValue(t0.c, out VN v); v?.segments.Add(new SG(c0, c1)); }
                 });
             }
         }
