@@ -76,6 +76,6 @@ Material:
     m_Colors:
     - _CircleCol: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EdgeCol: {r: 0.6702607, g: 0.34442154, b: 0.3388696, a: 1}
+    - _EdgeCol: {r: 0.9433962, g: 0.9433962, b: 0.9433962, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

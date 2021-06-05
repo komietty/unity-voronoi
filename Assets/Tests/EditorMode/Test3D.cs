@@ -13,17 +13,23 @@ namespace kmty.geom.d3.delauney {
     using d3 = double3;
 
     public class Test3D {
-        static int[] nums = { 1, 2, 3, 5, 10, 20, 30, 50};
+        static int[] nums = { 1, 2, 3, 4, 5, 10, 20, 30 };
 
         [Test]
-        public void DelaunayTrianglesTest([ValueSource(nameof(nums))] int num) {
+        public void Performance([Values(100)] int num) {
+            // takes 15.3 sec before refactor for 100 nums
             var sw = Stopwatch.StartNew();
             var bf = new BistellarFlip3D(num);
             sw.Stop();
             UnityEngine.Debug.Log(sw.Elapsed);
+        }
+
+        [Test]
+        public void DelaunayTrianglesTest([ValueSource(nameof(nums))] int num) {
+            var bf = new BistellarFlip3D(num);
             foreach (var n in bf.Nodes) {
                 var t = n.tetrahedra;
-                var c = n.tetrahedra.circumscribedSphere;
+                var c = n.tetrahedra.GetCircumscribedSphere();
                 var abc = new TR(t.a, t.b, t.c);
                 var bcd = new TR(t.b, t.c, t.d);
                 var cda = new TR(t.c, t.d, t.a);

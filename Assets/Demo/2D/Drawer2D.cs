@@ -78,7 +78,7 @@ namespace kmty.geom.d2.delaunay {
                 if (drawCirlcle) {
                     mat.SetPass(1);
                     GL.Begin(GL.LINE_STRIP);
-                    var c = t.circumscribedCircle;
+                    var c = t.GetCircumscribledCircle();
                     for (float j = 0; j < Mathf.PI * 2.1f; j += Mathf.PI * 0.03f)
                         GL.Vertex(new Vector2(cos(j), sin(j)) * c.radius + (Vector2)c.center);
                     GL.End();

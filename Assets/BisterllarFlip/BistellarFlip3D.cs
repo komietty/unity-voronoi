@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Unity.Mathematics;
-using static Unity.Mathematics.math;
 
 namespace kmty.geom.d3.delauney {
     using DN = DelaunayGraphNode3D;
@@ -61,23 +60,26 @@ namespace kmty.geom.d3.delauney {
         }
 
         public static (TR t1, TR t2, TR t3, TR t4, TR t5, TR t6, DN n1, DN n2)
-            Flip32(DN n1, DN n2, DN n3, TR t, d3 apex_x, d3 apex_y) {
-            DN nx = new DN(t.a, t.b, t.c, apex_x);
-            DN ny = new DN(t.a, t.b, t.c, apex_y);
-            nx.neighbor = new List<DN> { ny };
-            ny.neighbor = new List<DN> { nx };
-            TR xab = new TR(apex_x, t.a, t.b);
-            TR yab = new TR(apex_y, t.a, t.b);
-            TR xbc = new TR(apex_x, t.b, t.c);
-            TR ybc = new TR(apex_y, t.b, t.c);
-            TR xca = new TR(apex_x, t.c, t.a);
-            TR yca = new TR(apex_y, t.c, t.a);
-            n1.SetNeighbor(nx, xab); n1.SetNeighbor(nx, xbc); n1.SetNeighbor(nx, xca);
-            n2.SetNeighbor(nx, xab); n2.SetNeighbor(nx, xbc); n2.SetNeighbor(nx, xca);
-            n3.SetNeighbor(nx, xab); n3.SetNeighbor(nx, xbc); n3.SetNeighbor(nx, xca);
-            n1.SetNeighbor(ny, yab); n1.SetNeighbor(ny, ybc); n1.SetNeighbor(ny, yca);
-            n2.SetNeighbor(ny, yab); n2.SetNeighbor(ny, ybc); n2.SetNeighbor(ny, yca);
-            n3.SetNeighbor(ny, yab); n3.SetNeighbor(ny, ybc); n3.SetNeighbor(ny, yca);
+            Flip32(DN n1, DN n2, DN n3, d3 p31, d3 p12, d3 p23, d3 apex_x, d3 apex_y) {
+            d3 a = p31;
+            d3 b = p12;
+            d3 c = p23;
+            DN nx = new DN(a, b, c, apex_x);
+            DN ny = new DN(a, b, c, apex_y);
+            nx.neighbor.Add(ny);
+            ny.neighbor.Add(nx);
+            TR xab = new TR(apex_x, a, b);
+            TR yab = new TR(apex_y, a, b);
+            TR xbc = new TR(apex_x, b, c);
+            TR ybc = new TR(apex_y, b, c);
+            TR xca = new TR(apex_x, c, a);
+            TR yca = new TR(apex_y, c, a);
+            n1.SetNeighbor(nx, xab);
+            n2.SetNeighbor(nx, xbc);
+            n3.SetNeighbor(nx, xca);
+            n1.SetNeighbor(ny, yab);
+            n2.SetNeighbor(ny, ybc);
+            n3.SetNeighbor(ny, yca);
             return (xab, xbc, xca, yab, ybc, yca, nx, ny);
         }
 
@@ -111,12 +113,12 @@ namespace kmty.geom.d3.delauney {
             root = new Tetrahedra(new d3(0, 0, 0), new d3(3, 0, 0), new d3(0, 3, 0), new d3(0, 0, 3));
             nodes = new List<DN> { new DN(root) };
             for (var i = 0; i < num; i++) { Split(new d3(UR.value, UR.value, UR.value)); Leagalize(); }
-            nodes = nodes.Where(n => 
-                    !n.tetrahedra.HasPoint(root.a) &&
-                    !n.tetrahedra.HasPoint(root.b) &&
-                    !n.tetrahedra.HasPoint(root.c) &&
-                    !n.tetrahedra.HasPoint(root.d)
-                    ).ToList();
+            //nodes = nodes.Where(n => 
+            //        !n.tetrahedra.HasPoint(root.a) &&
+            //        !n.tetrahedra.HasPoint(root.b) &&
+            //        !n.tetrahedra.HasPoint(root.c) &&
+            //        !n.tetrahedra.HasPoint(root.d)
+            //        ).ToList();
         }
 
         void Split(d3 p) {
@@ -139,8 +141,7 @@ namespace kmty.geom.d3.delauney {
                 if (FindNodes(t, out DN n1, out DN n2)) {
                     var p1 = n1.tetrahedra.RemainingPoint(t);
                     var p2 = n2.tetrahedra.RemainingPoint(t);
-                    if (n1.tetrahedra.circumscribedSphere.Contains(p2) ||
-                        n2.tetrahedra.circumscribedSphere.Contains(p1)) {
+                    if (n1.tetrahedra.GetCircumscribedSphere().Contains(p2)) {
                         if (t.Intersects(new SG(p1, p2), out d3 i, out bool isOnEdge)) {
                             var o = DN.Flip23(n1, n2, p1, p2, t);
                             stack.Push(o.t1);
@@ -157,7 +158,7 @@ namespace kmty.geom.d3.delauney {
                         } else if (isOnEdge) { Debug.LogWarning("point is on edge");
                         } else {
                             d3 far;
-                            if (Util3D.IsIntersecting(new SG(i, t.a), new SG(t.b, t.c), 1e-15d)) far = t.a;
+                            if      (Util3D.IsIntersecting(new SG(i, t.a), new SG(t.b, t.c), 1e-15d)) far = t.a;
                             else if (Util3D.IsIntersecting(new SG(i, t.b), new SG(t.c, t.a), 1e-15d)) far = t.b;
                             else if (Util3D.IsIntersecting(new SG(i, t.c), new SG(t.a, t.b), 1e-15d)) far = t.c;
                             else throw new Exception();
@@ -168,7 +169,10 @@ namespace kmty.geom.d3.delauney {
 
                             if (!Equals(n3.tetrahedra.RemainingPoint(t3), p2)) continue;
 
-                            var o = DN.Flip32(n1, n2, n3, new TR(p1, p2, far), cm.a, cm.b);
+                            var p12 = far;
+                            var p23 = p2;
+                            var p31 = p1;
+                            var o = DN.Flip32(n1, n2, n3, p31, p12, p23, cm.a, cm.b);
                             stack.Push(o.t1);
                             stack.Push(o.t2);
                             stack.Push(o.t3);
@@ -187,8 +191,9 @@ namespace kmty.geom.d3.delauney {
         }
 
         bool FindNodes(TR t, out DN n1, out DN n2) {
-            var o = nodes.FindAll(n => n.tetrahedra.HasFace(t));
-            if (o.Count == 2) { n1 = o[0]; n2 = o[1]; return true; } else { n1 = n2 = default; return false; }
+            var o = nodes.FindAll(n => n.HasFacet(t));
+            if (o.Count == 2) { n1 = o[0]; n2 = o[1]; return true; }
+            else { n1 = n2 = default; return false; }
         }
     }
 
@@ -199,8 +204,8 @@ namespace kmty.geom.d3.delauney {
             this.delaunaies = dns;
             segments = new List<SG>();
             foreach (var d in delaunaies) {
-                var c0 = d.tetrahedra.circumscribedSphere.center;
-                d.neighbor.ForEach(n => segments.Add(new SG(c0, n.tetrahedra.circumscribedSphere.center)));
+                var c0 = d.tetrahedra.GetCircumscribedSphere().center;
+                d.neighbor.ForEach(n => segments.Add(new SG(c0, n.tetrahedra.GetCircumscribedSphere().center)));
             }
         }
     }
@@ -213,14 +218,14 @@ namespace kmty.geom.d3.delauney {
             nodes = new Dictionary<d3, VN>();
             foreach (var d in dns) {
                 var t0 = d.tetrahedra;
-                var c0 = t0.circumscribedSphere.center;
+                var c0 = t0.GetCircumscribedSphere().center;
                 if (!nodes.ContainsKey(t0.a)) nodes.Add(t0.a, new VN(t0.a));
                 if (!nodes.ContainsKey(t0.b)) nodes.Add(t0.b, new VN(t0.b));
                 if (!nodes.ContainsKey(t0.c)) nodes.Add(t0.c, new VN(t0.c));
                 if (!nodes.ContainsKey(t0.d)) nodes.Add(t0.d, new VN(t0.d));
                 d.neighbor.ForEach(n => {
                     var t1 = n.tetrahedra;
-                    var c1 = t1.circumscribedSphere.center;
+                    var c1 = t1.GetCircumscribedSphere().center;
                 });
             }
         }

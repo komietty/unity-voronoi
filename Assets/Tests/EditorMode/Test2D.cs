@@ -1,19 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
 namespace kmty.geom.d2.delaunay {
     public class Test2D {
-        static int[] nums = { 1, 2, 3, 5, 10, 20, 30 };
+        //static int[] nums = { 1, 2, 3, 5, 10, 20, 30 };
+        static int[] nums = { 1000 };
 
         [Test]
         public void DelaunayTrianglesTest([ValueSource(nameof(nums))] int num) {
+            var sw = Stopwatch.StartNew();
             var bf = new BistellarFlip2D(num);
+            sw.Stop();
+            UnityEngine.Debug.Log(sw.Elapsed);
             foreach (var n in bf.Nodes) {
                 var t = n.triangle;
-                var c = n.triangle.circumscribedCircle;
+                var c = n.triangle.GetCircumscribledCircle();
                 var ab = new Segment(t.a, t.b);
                 var bc = new Segment(t.b, t.c);
                 var ca = new Segment(t.c, t.a);
