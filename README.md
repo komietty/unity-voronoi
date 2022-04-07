@@ -3,15 +3,6 @@
 
 With this easily created Volonoi diagram.
 
-### 2D version
-
-<img src="Imgs/delaunay2D.PNG" width=50%>
-
-
-### 3D version
-
-<img src="Imgs/delaunay3D.PNG" width=50%>
-
 ## Usage
 
 using a [simplex geom submodule](https://github.com/komietty/unity-simplex-geometry), so update submodule first.
