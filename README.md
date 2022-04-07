@@ -1,7 +1,6 @@
 # unity-drauney-triangulation
-2D and 3D drauney triangulation module with bistellar flip method.
-
-With this easily created Volonoi diagram.
+2D/3D drauney triangulation module with bistellar flip method.
+This includes Delaunay - Voronoi convert method, and meshing.
 
 ## Usage
 
