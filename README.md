@@ -1,5 +1,5 @@
-# unity-drauney-triangulation
-2D/3D drauney triangulation module with bistellar flip method.
+# unity-delauney-triangulation
+2D/3D delauney triangulation module with bistellar flip method.
 This includes Delaunay-Voronoi converting method, and meshing method.
 
 ![img](Imgs/voronoi3d.png)
