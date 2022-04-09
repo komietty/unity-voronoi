@@ -198,28 +198,58 @@ namespace kmty.geom.d3.delauney {
     }
 
     public class VoronoiGraphFaceNode3D {
-        public d3 center;
+        public Vector3 key;
         public List<SG> segments;
         public Mesh mesh;
-        public VoronoiGraphFaceNode3D(d3 c) {
-            this.center = c;
+        public d3 center;
+        public d3 nodeCenter;
+        public VoronoiGraphFaceNode3D(Vector3 key, d3 nodeCenter) {
+            this.key = key;
             this.segments = new List<SG>();
+            this.nodeCenter = nodeCenter;
         }
         public void Meshilify() {
-            
+            this.center = segments.Select(s => s.a).Aggregate((p, x) => p + x) / segments.Count;
+            var l = segments.Count * 3;
+            var norm = this.center - this.nodeCenter; 
+            var vtcs = new List<Vector3>();
+            var tris = Enumerable.Range(0, l).ToArray();
+            segments.ForEach(s => {
+                var c = (Vector3)(float3)center;
+                var a = (Vector3)(float3)s.a;
+                var b = (Vector3)(float3)s.b;
+                var f = Vector3.Dot(Vector3.Cross(a - c, b - a), (Vector3)(float3)norm) > 0;
+                vtcs.Add(c);
+                if (f) { vtcs.Add(b); vtcs.Add(a); }
+                else   { vtcs.Add(a); vtcs.Add(b); }
+            });
+            if (vtcs.Count != l) Debug.Log(vtcs.Count);
+            mesh = new Mesh();
+            mesh.vertices = vtcs.ToArray();
+            mesh.triangles = tris;
         }
     }
 
     public class VoronoiGraphNode3D {
         public d3 center;
         public List<(SG segment, d3 pair)> segments;
-        public Mesh mesh;
+        public Mesh[] meshes;
+        public List<VoronoiGraphFaceNode3D> faces;
         public VoronoiGraphNode3D(d3 c) {
             this.center = c;
             this.segments = new List<(SG, d3)>();
         }
         public void Meshilify() {
-            
+            faces = segments.Select(s => (Vector3)(float3)s.pair)
+                            .Distinct()
+                            .Select(key => new VoronoiGraphFaceNode3D(key, this.center))
+                            .ToList();
+            foreach (var s in segments) {
+                foreach (var f in faces) {
+                    if ((Vector3)(float3)s.pair == f.key) { f.segments.Add(s.segment); }
+                }
+            }
+            faces.ForEach(f => f.Meshilify());
         }
     }
 

@@ -29,15 +29,22 @@ namespace kmty.geom.d3.delauney {
             nodes = bf.Nodes.ToArray();
             voronoi = new VG(nodes);
             if (createMesh) {
+                int count = 0;
                 foreach (var n in voronoi.nodes) {
-                    n.Value.Meshilify();
-                    var g = new GameObject();
-                    var f = g.AddComponent<MeshFilter>();
-                    var r = g.AddComponent<MeshRenderer>();
-                    r.sharedMaterial = mat2;
-                    f.mesh = n.Value.mesh;
-                    g.transform.position = Vector3.forward * UnityEngine.Random.value;
-                    g.transform.SetParent(this.transform);
+                    if (count == debugVNodeId) {
+                        n.Value.Meshilify();
+                        /*
+                        */
+                        foreach (var _f in n.Value.faces) {
+                            var g = new GameObject();
+                            var f = g.AddComponent<MeshFilter>();
+                            var r = g.AddComponent<MeshRenderer>();
+                            r.sharedMaterial = mat2;
+                            f.mesh = _f.mesh;
+                            g.transform.SetParent(this.transform);
+                        }
+                    }
+                    count++;
                 }
             }
         }
@@ -56,12 +63,15 @@ namespace kmty.geom.d3.delauney {
                     var c = (f3)n.Value.center;
                     Gizmos.color = Color.blue;
                     Gizmos.DrawWireSphere(c, 0.01f);
-                    foreach (var s in n.Value.segments) {
-                        var p = (f3)s.pair;
-                        Gizmos.color = Color.red;
-                        Gizmos.DrawLine(c, p);
-                        //Gizmos.DrawLine(c, (c + p) / 2);
+                    foreach (var f in n.Value.faces) {
+                        Gizmos.color = Color.cyan;
+                        Gizmos.DrawWireSphere((float3)f.center, 0.01f);
                     }
+                    //foreach (var s in n.Value.segments) {
+                    //    var p = (f3)s.pair;
+                    //    Gizmos.color = Color.red;
+                    //    Gizmos.DrawLine(c, p);
+                    //}
                 }
                 count++;
             }
