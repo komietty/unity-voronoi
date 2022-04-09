@@ -8,6 +8,7 @@ using Unity.Mathematics;
 namespace kmty.geom.d3.delauney {
     using DN = DelaunayGraphNode3D;
     using VN = VoronoiGraphNode3D;
+    using VF = VoronoiGraphFace3D;
     using UR = UnityEngine.Random;
     using TR = Triangle;
     using SG = Segment;
@@ -197,70 +198,63 @@ namespace kmty.geom.d3.delauney {
         }
     }
 
-    public class VoronoiGraphFaceNode3D {
+    public class VoronoiGraphFace3D {
+        public Mesh mesh;
         public Vector3 key;
         public List<SG> segments;
-        public Mesh mesh;
-        public d3 center;
+        public d3 faceCenter;
         public d3 nodeCenter;
-        public VoronoiGraphFaceNode3D(Vector3 key, d3 nodeCenter) {
+        public VoronoiGraphFace3D(Vector3 key, d3 nodeCenter) {
             this.key = key;
             this.segments = new List<SG>();
             this.nodeCenter = nodeCenter;
         }
         public void Meshilify() {
-            this.center = segments.Select(s => s.a).Aggregate((p, x) => p + x) / segments.Count;
+            this.faceCenter = segments.Select(s => s.a).Aggregate((o, v) => o + v) / segments.Count;
             var l = segments.Count * 3;
-            var norm = this.center - this.nodeCenter; 
+            var norm = faceCenter - nodeCenter; 
             var vtcs = new List<Vector3>();
             var tris = Enumerable.Range(0, l).ToArray();
             segments.ForEach(s => {
-                var c = (Vector3)(float3)center;
-                var a = (Vector3)(float3)s.a;
-                var b = (Vector3)(float3)s.b;
-                var f = Vector3.Dot(Vector3.Cross(a - c, b - a), (Vector3)(float3)norm) < 0;
-                vtcs.Add(c);
-                if (f) { vtcs.Add(b); vtcs.Add(a); }
-                else   { vtcs.Add(a); vtcs.Add(b); }
+                var c = (float3)faceCenter;
+                var o = (float3)nodeCenter;
+                var a = (float3)s.a;
+                var b = (float3)s.b;
+                var f = Vector3.Dot(Vector3.Cross(a - c, b - a), (float3)norm) < 0;
+                vtcs.Add(c - o);
+                if (f) { vtcs.Add(b - o); vtcs.Add(a - o); }
+                else   { vtcs.Add(a - o); vtcs.Add(b - o); }
             });
-            if (vtcs.Count != l) Debug.Log(vtcs.Count);
             mesh = new Mesh();
-            mesh.vertices = vtcs.ToArray();
-            mesh.triangles = tris;
+            mesh.SetVertices(vtcs);
+            mesh.SetTriangles(tris, 0);
         }
     }
 
     public class VoronoiGraphNode3D {
         public d3 center;
-        public List<(SG segment, d3 pair)> segments;
         public Mesh mesh;
-        public List<VoronoiGraphFaceNode3D> faces;
+        public List<(SG segment, Vector3 pair)> segments;
+        public List<VF> faces;
         public VoronoiGraphNode3D(d3 c) {
             this.center = c;
-            this.segments = new List<(SG, d3)>();
+            this.segments = new List<(SG, Vector3)>();
         }
         public void Meshilify() {
             mesh = new Mesh();
-            faces = segments.Select(s => (Vector3)(float3)s.pair)
-                            .Distinct()
-                            .Select(key => new VoronoiGraphFaceNode3D(key, this.center))
-                            .ToList();
-            foreach (var s in segments) {
-                foreach (var f in faces) {
-                    if ((Vector3)(float3)s.pair == f.key) { f.segments.Add(s.segment); }
-                }
+            faces = segments.Select(s => s.pair).Distinct().Select(p => new VF(p, center)).ToList();
+            foreach (var s in segments) 
+            foreach (var f in faces) {
+                if (s.pair == f.key) f.segments.Add(s.segment);
             }
+           
             faces.ForEach(f => f.Meshilify());
 
-            var instances = faces.Select(f =>{
-                var c = new CombineInstance();
-                c.mesh = f.mesh;
-                c.transform.SetTRS((float3)f.center, Quaternion.identity, Vector3.one);
-                return c;
-            }).ToArray();
-            mesh.CombineMeshes(instances, true, false, false);
+            var cis = faces.Select(f => { var c = new CombineInstance(); c.mesh = f.mesh; return c; }).ToArray();
+            mesh.CombineMeshes(cis, true, false, false);
             mesh.RecalculateNormals();
             mesh.RecalculateTangents();
+            mesh.RecalculateBounds();
         }
     }
 
@@ -270,40 +264,36 @@ namespace kmty.geom.d3.delauney {
         public VoronoiGraph3D(DN[] dns) {
             nodes = new Dictionary<d3, VN>();
             foreach (var d in dns) {
-                var t0 = d.tetrahedra;
-                var c0 = t0.GetCircumscribedSphere().center;
-                if (!nodes.ContainsKey(t0.a)) nodes.Add(t0.a, new VN(t0.a));
-                if (!nodes.ContainsKey(t0.b)) nodes.Add(t0.b, new VN(t0.b));
-                if (!nodes.ContainsKey(t0.c)) nodes.Add(t0.c, new VN(t0.c));
-                if (!nodes.ContainsKey(t0.d)) nodes.Add(t0.d, new VN(t0.d));
+                var t = d.tetrahedra;
+                var c = t.GetCircumscribedSphere().center;
+                if (!nodes.ContainsKey(t.a)) nodes.Add(t.a, new VN(t.a));
+                if (!nodes.ContainsKey(t.b)) nodes.Add(t.b, new VN(t.b));
+                if (!nodes.ContainsKey(t.c)) nodes.Add(t.c, new VN(t.c));
+                if (!nodes.ContainsKey(t.d)) nodes.Add(t.d, new VN(t.d));
                 d.neighbor.ForEach(n => {
                     var c1 = n.tetrahedra.GetCircumscribedSphere().center;
-                    var v = c1 - c0;
-                    var s = new SG(c0, c1);
-
-                    AssignSegment(t0.b, t0.a, v, s);
-                    AssignSegment(t0.c, t0.a, v, s);
-                    AssignSegment(t0.d, t0.a, v, s);
-
-                    AssignSegment(t0.c, t0.b, v, s);
-                    AssignSegment(t0.d, t0.b, v, s);
-                    AssignSegment(t0.a, t0.b, v, s);
-
-                    AssignSegment(t0.d, t0.c, v, s);
-                    AssignSegment(t0.a, t0.c, v, s);
-                    AssignSegment(t0.b, t0.c, v, s);
-
-                    AssignSegment(t0.a, t0.d, v, s);
-                    AssignSegment(t0.b, t0.d, v, s);
-                    AssignSegment(t0.c, t0.d, v, s);
+                    var v  = c1 - c;
+                    var s  = new SG(c, c1);
+                    AssignSegment(t.b, t.a, v, s);
+                    AssignSegment(t.c, t.a, v, s);
+                    AssignSegment(t.d, t.a, v, s);
+                    AssignSegment(t.c, t.b, v, s);
+                    AssignSegment(t.d, t.b, v, s);
+                    AssignSegment(t.a, t.b, v, s);
+                    AssignSegment(t.d, t.c, v, s);
+                    AssignSegment(t.a, t.c, v, s);
+                    AssignSegment(t.b, t.c, v, s);
+                    AssignSegment(t.a, t.d, v, s);
+                    AssignSegment(t.b, t.d, v, s);
+                    AssignSegment(t.c, t.d, v, s);
                 });
             }
 
             const double th = 1e-5d;
-            void AssignSegment(d3 pair, d3 center, d3 v1, SG sg) {
-                if (math.abs(math.dot(pair - center, v1)) < th) {
-                    nodes.TryGetValue(center, out VN v);
-                    v?.segments.Add((sg, pair));
+            void AssignSegment(d3 pair, d3 cntr, d3 v1, SG sg) {
+                if (math.abs(math.dot(pair - cntr, v1)) < th) {
+                    nodes.TryGetValue(cntr, out VN v);
+                    v?.segments.Add((sg, (float3)pair));
                 }
             }
 
