@@ -33,16 +33,12 @@ namespace kmty.geom.d3.delauney {
                 foreach (var n in voronoi.nodes) {
                     if (count == debugVNodeId) {
                         n.Value.Meshilify();
-                        /*
-                        */
-                        foreach (var _f in n.Value.faces) {
                             var g = new GameObject();
                             var f = g.AddComponent<MeshFilter>();
                             var r = g.AddComponent<MeshRenderer>();
                             r.sharedMaterial = mat2;
-                            f.mesh = _f.mesh;
+                            f.mesh = n.Value.mesh;
                             g.transform.SetParent(this.transform);
-                        }
                     }
                     count++;
                 }
@@ -62,16 +58,11 @@ namespace kmty.geom.d3.delauney {
                 if (count == debugVNodeId) {
                     var c = (f3)n.Value.center;
                     Gizmos.color = Color.blue;
-                    Gizmos.DrawWireSphere(c, 0.01f);
+                    Gizmos.DrawWireSphere(c, 0.02f);
                     foreach (var f in n.Value.faces) {
                         Gizmos.color = Color.cyan;
                         Gizmos.DrawWireSphere((float3)f.center, 0.01f);
                     }
-                    //foreach (var s in n.Value.segments) {
-                    //    var p = (f3)s.pair;
-                    //    Gizmos.color = Color.red;
-                    //    Gizmos.DrawLine(c, p);
-                    //}
                 }
                 count++;
             }
@@ -96,11 +87,6 @@ namespace kmty.geom.d3.delauney {
         void DrawVoronoi() {
             GL.PushMatrix();
             GL.Begin(GL.LINES);
-            //foreach (var s in voronoi.segments) {
-            //    mat.SetPass(3);
-            //    GL.Vertex((f3)s.a);
-            //    GL.Vertex((f3)s.b);
-            //}
             int count = 0;
             foreach (var n in voronoi.nodes) {
                 if (count == debugVNodeId) {

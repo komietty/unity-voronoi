@@ -218,7 +218,7 @@ namespace kmty.geom.d3.delauney {
                 var c = (Vector3)(float3)center;
                 var a = (Vector3)(float3)s.a;
                 var b = (Vector3)(float3)s.b;
-                var f = Vector3.Dot(Vector3.Cross(a - c, b - a), (Vector3)(float3)norm) > 0;
+                var f = Vector3.Dot(Vector3.Cross(a - c, b - a), (Vector3)(float3)norm) < 0;
                 vtcs.Add(c);
                 if (f) { vtcs.Add(b); vtcs.Add(a); }
                 else   { vtcs.Add(a); vtcs.Add(b); }
@@ -233,13 +233,14 @@ namespace kmty.geom.d3.delauney {
     public class VoronoiGraphNode3D {
         public d3 center;
         public List<(SG segment, d3 pair)> segments;
-        public Mesh[] meshes;
+        public Mesh mesh;
         public List<VoronoiGraphFaceNode3D> faces;
         public VoronoiGraphNode3D(d3 c) {
             this.center = c;
             this.segments = new List<(SG, d3)>();
         }
         public void Meshilify() {
+            mesh = new Mesh();
             faces = segments.Select(s => (Vector3)(float3)s.pair)
                             .Distinct()
                             .Select(key => new VoronoiGraphFaceNode3D(key, this.center))
@@ -250,6 +251,16 @@ namespace kmty.geom.d3.delauney {
                 }
             }
             faces.ForEach(f => f.Meshilify());
+
+            var instances = faces.Select(f =>{
+                var c = new CombineInstance();
+                c.mesh = f.mesh;
+                c.transform.SetTRS((float3)f.center, Quaternion.identity, Vector3.one);
+                return c;
+            }).ToArray();
+            mesh.CombineMeshes(instances, true, false, false);
+            mesh.RecalculateNormals();
+            mesh.RecalculateTangents();
         }
     }
 
@@ -266,26 +277,25 @@ namespace kmty.geom.d3.delauney {
                 if (!nodes.ContainsKey(t0.c)) nodes.Add(t0.c, new VN(t0.c));
                 if (!nodes.ContainsKey(t0.d)) nodes.Add(t0.d, new VN(t0.d));
                 d.neighbor.ForEach(n => {
-                    var t1 = n.tetrahedra;
-                    var c1 = t1.GetCircumscribedSphere().center;
-                    var v1 = c1 - c0;
-                    var sg = new SG(c0, c1);
+                    var c1 = n.tetrahedra.GetCircumscribedSphere().center;
+                    var v = c1 - c0;
+                    var s = new SG(c0, c1);
 
-                    AssignSegment(t0.b, t0.a, v1, sg);
-                    AssignSegment(t0.c, t0.a, v1, sg);
-                    AssignSegment(t0.d, t0.a, v1, sg);
+                    AssignSegment(t0.b, t0.a, v, s);
+                    AssignSegment(t0.c, t0.a, v, s);
+                    AssignSegment(t0.d, t0.a, v, s);
 
-                    AssignSegment(t0.c, t0.b, v1, sg);
-                    AssignSegment(t0.d, t0.b, v1, sg);
-                    AssignSegment(t0.a, t0.b, v1, sg);
+                    AssignSegment(t0.c, t0.b, v, s);
+                    AssignSegment(t0.d, t0.b, v, s);
+                    AssignSegment(t0.a, t0.b, v, s);
 
-                    AssignSegment(t0.d, t0.c, v1, sg);
-                    AssignSegment(t0.a, t0.c, v1, sg);
-                    AssignSegment(t0.b, t0.c, v1, sg);
+                    AssignSegment(t0.d, t0.c, v, s);
+                    AssignSegment(t0.a, t0.c, v, s);
+                    AssignSegment(t0.b, t0.c, v, s);
 
-                    AssignSegment(t0.a, t0.d, v1, sg);
-                    AssignSegment(t0.b, t0.d, v1, sg);
-                    AssignSegment(t0.c, t0.d, v1, sg);
+                    AssignSegment(t0.a, t0.d, v, s);
+                    AssignSegment(t0.b, t0.d, v, s);
+                    AssignSegment(t0.c, t0.d, v, s);
                 });
             }
 
