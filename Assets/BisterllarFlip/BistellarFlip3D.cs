@@ -197,19 +197,31 @@ namespace kmty.geom.d3.delauney {
         }
     }
 
-    public class VoronoiTestViewer {
-        public DN[] delaunaies;
+    public class VoronoiGraphFaceNode3D {
+        public d3 center;
         public List<SG> segments;
-        public VoronoiTestViewer(DN[] dns) {
-            this.delaunaies = dns;
-            segments = new List<SG>();
-            foreach (var d in delaunaies) {
-                var c0 = d.tetrahedra.GetCircumscribedSphere().center;
-                d.neighbor.ForEach(n => segments.Add(new SG(c0, n.tetrahedra.GetCircumscribedSphere().center)));
-            }
+        public Mesh mesh;
+        public VoronoiGraphFaceNode3D(d3 c) {
+            this.center = c;
+            this.segments = new List<SG>();
+        }
+        public void Meshilify() {
+            
         }
     }
 
+    public class VoronoiGraphNode3D {
+        public d3 center;
+        public List<(SG segment, d3 pair)> segments;
+        public Mesh mesh;
+        public VoronoiGraphNode3D(d3 c) {
+            this.center = c;
+            this.segments = new List<(SG, d3)>();
+        }
+        public void Meshilify() {
+            
+        }
+    }
 
     public class VoronoiGraph3D {
         public Dictionary<d3, VN> nodes;
@@ -226,19 +238,36 @@ namespace kmty.geom.d3.delauney {
                 d.neighbor.ForEach(n => {
                     var t1 = n.tetrahedra;
                     var c1 = t1.GetCircumscribedSphere().center;
+                    var v1 = c1 - c0;
+                    var sg = new SG(c0, c1);
+
+                    AssignSegment(t0.b, t0.a, v1, sg);
+                    AssignSegment(t0.c, t0.a, v1, sg);
+                    AssignSegment(t0.d, t0.a, v1, sg);
+
+                    AssignSegment(t0.c, t0.b, v1, sg);
+                    AssignSegment(t0.d, t0.b, v1, sg);
+                    AssignSegment(t0.a, t0.b, v1, sg);
+
+                    AssignSegment(t0.d, t0.c, v1, sg);
+                    AssignSegment(t0.a, t0.c, v1, sg);
+                    AssignSegment(t0.b, t0.c, v1, sg);
+
+                    AssignSegment(t0.a, t0.d, v1, sg);
+                    AssignSegment(t0.b, t0.d, v1, sg);
+                    AssignSegment(t0.c, t0.d, v1, sg);
                 });
             }
+
+            const double th = 1e-5d;
+            void AssignSegment(d3 pair, d3 center, d3 v1, SG sg) {
+                if (math.abs(math.dot(pair - center, v1)) < th) {
+                    nodes.TryGetValue(center, out VN v);
+                    v?.segments.Add((sg, pair));
+                }
+            }
+
         }
     }
 
-    public class VoronoiGraphNode3D {
-        public d3 center;
-        public List<SG> segments;
-        //public Mesh mesh;
-        public VoronoiGraphNode3D(d3 c) {
-            this.center = c;
-            this.segments = new List<SG>();
-        }
-        public void Meshilify() { }
-    }
 }
