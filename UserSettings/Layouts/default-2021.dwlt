@@ -19,12 +19,90 @@ MonoBehaviour:
     width: 1792
     height: 1067
   m_ShowMode: 4
-  m_Title: Scene
-  m_RootView: {fileID: 9}
-  m_MinSize: {x: 875, y: 371}
+  m_Title: Test Runner
+  m_RootView: {fileID: 12}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
-  m_Maximized: 0
+  m_Maximized: 1
 --- !u!114 &2
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: TestRunnerWindow
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 452
+    width: 384
+    height: 465
+  m_MinSize: {x: 101, y: 121}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 16}
+  m_Panes:
+  - {fileID: 16}
+  m_Selected: 0
+  m_LastSelected: 0
+--- !u!114 &3
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: GameView
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 917
+    width: 384
+    height: 100
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 22}
+  m_Panes:
+  - {fileID: 22}
+  m_Selected: 0
+  m_LastSelected: 0
+--- !u!114 &4
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 10}
+  - {fileID: 2}
+  - {fileID: 3}
+  m_Position:
+    serializedVersion: 2
+    x: 1408
+    y: 0
+    width: 384
+    height: 1017
+  m_MinSize: {x: 100, y: 300}
+  m_MaxSize: {x: 8096, y: 24288}
+  vertical: 1
+  controlID: 3486
+--- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,17 +118,17 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 678
-    width: 1125
-    height: 339
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 20}
+    y: 472
+    width: 1104.5
+    height: 545
+  m_MinSize: {x: 102, y: 121}
+  m_MaxSize: {x: 4002, y: 4021}
+  m_ActualView: {fileID: 23}
   m_Panes:
-  - {fileID: 20}
+  - {fileID: 23}
   m_Selected: 0
   m_LastSelected: 0
---- !u!114 &3
+--- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,19 +141,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 13}
-  - {fileID: 2}
+  - {fileID: 15}
+  - {fileID: 5}
   m_Position:
     serializedVersion: 2
     x: 303.5
     y: 0
-    width: 1125
+    width: 1104.5
     height: 1017
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 89
---- !u!114 &4
+  controlID: 99
+--- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,17 +169,17 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 678
+    y: 388
     width: 303.5
-    height: 339
+    height: 629
   m_MinSize: {x: 231, y: 271}
   m_MaxSize: {x: 10001, y: 10021}
-  m_ActualView: {fileID: 15}
+  m_ActualView: {fileID: 18}
   m_Panes:
-  - {fileID: 15}
+  - {fileID: 18}
   m_Selected: 0
   m_LastSelected: 0
---- !u!114 &5
+--- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,8 +192,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 8}
-  - {fileID: 4}
+  - {fileID: 11}
+  - {fileID: 7}
   m_Position:
     serializedVersion: 2
     x: 0
@@ -125,8 +203,8 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 32
---- !u!114 &6
+  controlID: 70
+--- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,19 +217,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 12}
-  - {fileID: 7}
+  - {fileID: 8}
+  - {fileID: 6}
+  - {fileID: 4}
   m_Position:
     serializedVersion: 2
     x: 0
     y: 30
     width: 1792
     height: 1017
-  m_MinSize: {x: 300, y: 200}
-  m_MaxSize: {x: 24288, y: 16192}
+  m_MinSize: {x: 300, y: 300}
+  m_MaxSize: {x: 24288, y: 24288}
   vertical: 0
-  controlID: 87
---- !u!114 &7
+  controlID: 3485
+--- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -166,18 +245,18 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1428.5
+    x: 0
     y: 0
-    width: 363.5
-    height: 1017
+    width: 384
+    height: 452
   m_MinSize: {x: 275, y: 50}
   m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 16}
+  m_ActualView: {fileID: 19}
   m_Panes:
-  - {fileID: 16}
+  - {fileID: 19}
   m_Selected: 0
   m_LastSelected: 0
---- !u!114 &8
+--- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,15 +274,15 @@ MonoBehaviour:
     x: 0
     y: 0
     width: 303.5
-    height: 678
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 17}
+    height: 388
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 20}
   m_Panes:
-  - {fileID: 17}
+  - {fileID: 20}
   m_Selected: 0
   m_LastSelected: 0
---- !u!114 &9
+--- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -216,9 +295,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 10}
-  - {fileID: 6}
-  - {fileID: 11}
+  - {fileID: 13}
+  - {fileID: 9}
+  - {fileID: 14}
   m_Position:
     serializedVersion: 2
     x: 0
@@ -231,7 +310,7 @@ MonoBehaviour:
   m_TopViewHeight: 30
   m_UseBottomView: 1
   m_BottomViewHeight: 20
---- !u!114 &10
+--- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,7 +332,7 @@ MonoBehaviour:
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
   m_LastLoadedLayoutName: 
---- !u!114 &11
+--- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -274,32 +353,7 @@ MonoBehaviour:
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
---- !u!114 &12
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Children:
-  - {fileID: 5}
-  - {fileID: 3}
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1428.5
-    height: 1017
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 16192, y: 16192}
-  vertical: 0
-  controlID: 88
---- !u!114 &13
+--- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -316,18 +370,1003 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1125
-    height: 678
+    width: 1104.5
+    height: 472
   m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 18}
+  m_ActualView: {fileID: 21}
   m_Panes:
-  - {fileID: 18}
-  - {fileID: 19}
-  - {fileID: 14}
+  - {fileID: 21}
+  - {fileID: 17}
   m_Selected: 0
-  m_LastSelected: 1
---- !u!114 &14
+  m_LastSelected: 0
+--- !u!114 &16
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13401, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Test Runner
+    m_Image: {fileID: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 1408
+    y: 535
+    width: 383
+    height: 444
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  m_Spl:
+    ID: 3502
+    splitterInitialOffset: 0
+    currentActiveSplitter: -1
+    realSizes:
+    - 280.5
+    - 93.5
+    relativeSizes:
+    - 0.75
+    - 0.25
+    minSizes:
+    - 32
+    - 32
+    maxSizes:
+    - 0
+    - 0
+    lastTotalSize: 374
+    splitSize: 6
+    xOffset: 0
+    m_Version: 1
+    oldRealSizes: 
+    oldMinSizes: 
+    oldMaxSizes: 
+    oldSplitSize: 0
+  m_TestTypeToolbarIndex: 1
+  m_PlayModeTestListGUI:
+    m_Window: {fileID: 0}
+    m_NewResultList: []
+    m_ResultText: 
+    m_ResultStacktrace: 
+    m_TestListState:
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 
+      m_RenameOverlay:
+        m_UserAcceptedRename: 0
+        m_Name: 
+        m_OriginalName: 
+        m_EditFieldRect:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        m_UserData: 0
+        m_IsWaitingForDelay: 0
+        m_IsRenaming: 0
+        m_OriginalEventType: 11
+        m_IsRenamingFilename: 0
+        m_ClientGUIView: {fileID: 0}
+      m_SearchString: 
+    m_TestRunnerUIFilter:
+      PassedHidden: 0
+      FailedHidden: 0
+      NotRunHidden: 0
+      m_SearchString: 
+      selectedCategoryMask: 0
+      availableCategories: []
+    m_SelectedOption: 0
+  m_EditModeTestListGUI:
+    m_Window: {fileID: 16}
+    m_NewResultList:
+    - id: 1000
+      uniqueId: '[unity-voronoi][suite]'
+      name: unity-voronoi
+      fullName: unity-voronoi
+      resultStatus: 1
+      duration: 0.1006085
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 
+      parentUniqueId: 
+    - id: 1029
+      uniqueId: '[EditorMode.dll][suite]'
+      name: EditorMode.dll
+      fullName: /Users/sakikomikado/dev/unity-delaunay-triangulation/Library/ScriptAssemblies/EditorMode.dll
+      resultStatus: 1
+      duration: 0.0694111
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1000
+      parentUniqueId: '[unity-voronoi][suite]'
+    - id: 1030
+      uniqueId: EditorMode.dll/[kmty][suite]
+      name: kmty
+      fullName: kmty
+      resultStatus: 1
+      duration: 0.0662724
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1029
+      parentUniqueId: '[EditorMode.dll][suite]'
+    - id: 1031
+      uniqueId: EditorMode.dll/kmty/[geom][suite]
+      name: geom
+      fullName: kmty.geom
+      resultStatus: 1
+      duration: 0.0503434
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1030
+      parentUniqueId: EditorMode.dll/[kmty][suite]
+    - id: 1032
+      uniqueId: EditorMode.dll/kmty/geom/[EditorMode][kmty.geom.csg][suite]
+      name: csg
+      fullName: kmty.geom.csg
+      resultStatus: 1
+      duration: 0.046406
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1031
+      parentUniqueId: EditorMode.dll/kmty/[geom][suite]
+    - id: 1001
+      uniqueId: EditorMode.dll/kmty/geom/csg/[EditorMode][kmty.geom.csg.TestCSG][suite]
+      name: TestCSG
+      fullName: kmty.geom.csg.TestCSG
+      resultStatus: 1
+      duration: 0.0402206
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1032
+      parentUniqueId: EditorMode.dll/kmty/geom/[EditorMode][kmty.geom.csg][suite]
+    - id: 1004
+      uniqueId: EditorMode.dll/kmty/geom/csg/TestCSG/[EditorMode][kmty.geom.csg.TestCSG.NodeDeepCopy]
+      name: NodeDeepCopy
+      fullName: kmty.geom.csg.TestCSG.NodeDeepCopy
+      resultStatus: 1
+      duration: 0.022501
+      messages: 
+      output: '1
+
+        2
+
+        0
+
+        1
+
+        0
+
+        1
+
+        1
+
+        0
+
+        0
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: EditorMode.dll/kmty/geom/csg/[EditorMode][kmty.geom.csg.TestCSG][suite]
+    - id: 1002
+      uniqueId: EditorMode.dll/kmty/geom/csg/TestCSG/[EditorMode][kmty.geom.csg.TestCSG.PlaneDeepCopy]
+      name: PlaneDeepCopy
+      fullName: kmty.geom.csg.TestCSG.PlaneDeepCopy
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: EditorMode.dll/kmty/geom/csg/[EditorMode][kmty.geom.csg.TestCSG][suite]
+    - id: 1003
+      uniqueId: EditorMode.dll/kmty/geom/csg/TestCSG/[EditorMode][kmty.geom.csg.TestCSG.PolygonDeepCopy]
+      name: PolygonDeepCopy
+      fullName: kmty.geom.csg.TestCSG.PolygonDeepCopy
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: EditorMode.dll/kmty/geom/csg/[EditorMode][kmty.geom.csg.TestCSG][suite]
+    - id: 1035
+      uniqueId: EditorMode.dll/kmty/geom/[d2][suite]
+      name: d2
+      fullName: kmty.geom.d2
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1031
+      parentUniqueId: EditorMode.dll/kmty/[geom][suite]
+    - id: 1036
+      uniqueId: EditorMode.dll/kmty/geom/d2/[EditorMode][kmty.geom.d2.delaunay][suite]
+      name: delaunay
+      fullName: kmty.geom.d2.delaunay
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1035
+      parentUniqueId: EditorMode.dll/kmty/geom/[d2][suite]
+    - id: 1026
+      uniqueId: EditorMode.dll/kmty/geom/d2/delaunay/[EditorMode][kmty.geom.d2.delaunay.Test2D][suite]
+      name: Test2D
+      fullName: kmty.geom.d2.delaunay.Test2D
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1036
+      parentUniqueId: EditorMode.dll/kmty/geom/d2/[EditorMode][kmty.geom.d2.delaunay][suite]
+    - id: 1028
+      uniqueId: EditorMode.dll/kmty/geom/d2/delaunay/Test2D/[EditorMode][kmty.geom.d2.delaunay.Test2D.DelaunayTrianglesTest][suite]
+      name: DelaunayTrianglesTest
+      fullName: kmty.geom.d2.delaunay.Test2D.DelaunayTrianglesTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1026
+      parentUniqueId: EditorMode.dll/kmty/geom/d2/delaunay/[EditorMode][kmty.geom.d2.delaunay.Test2D][suite]
+    - id: 1027
+      uniqueId: EditorMode.dll/kmty/geom/d2/delaunay/Test2D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d2.delaunay.Test2D.DelaunayTrianglesTest(1000)]
+      name: DelaunayTrianglesTest(1000)
+      fullName: kmty.geom.d2.delaunay.Test2D.DelaunayTrianglesTest(1000)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1028
+      parentUniqueId: EditorMode.dll/kmty/geom/d2/delaunay/Test2D/[EditorMode][kmty.geom.d2.delaunay.Test2D.DelaunayTrianglesTest][suite]
+    - id: 1033
+      uniqueId: EditorMode.dll/kmty/geom/[d3][suite]
+      name: d3
+      fullName: kmty.geom.d3
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1031
+      parentUniqueId: EditorMode.dll/kmty/[geom][suite]
+    - id: 1034
+      uniqueId: EditorMode.dll/kmty/geom/d3/[EditorMode][kmty.geom.d3.delauney][suite]
+      name: delauney
+      fullName: kmty.geom.d3.delauney
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1033
+      parentUniqueId: EditorMode.dll/kmty/geom/[d3][suite]
+    - id: 1005
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/[EditorMode][kmty.geom.d3.delauney.Test3D][suite]
+      name: Test3D
+      fullName: kmty.geom.d3.delauney.Test3D
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1034
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/[EditorMode][kmty.geom.d3.delauney][suite]
+    - id: 1016
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+      name: DelaunayTrianglesTest
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1005
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/[EditorMode][kmty.geom.d3.delauney.Test3D][suite]
+    - id: 1008
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(1)]
+      name: DelaunayTrianglesTest(1)
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(1)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+    - id: 1009
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(2)]
+      name: DelaunayTrianglesTest(2)
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(2)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+    - id: 1010
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(3)]
+      name: DelaunayTrianglesTest(3)
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(3)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+    - id: 1011
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(4)]
+      name: DelaunayTrianglesTest(4)
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(4)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+    - id: 1012
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(5)]
+      name: DelaunayTrianglesTest(5)
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(5)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+    - id: 1013
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(10)]
+      name: DelaunayTrianglesTest(10)
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(10)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+    - id: 1014
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(20)]
+      name: DelaunayTrianglesTest(20)
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(20)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+    - id: 1015
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/DelaunayTrianglesTest/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(30)]
+      name: DelaunayTrianglesTest(30)
+      fullName: kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest(30)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.DelaunayTrianglesTest][suite]
+    - id: 1025
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+      name: MustHave4NeighborExceptMostOuter
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1005
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/[EditorMode][kmty.geom.d3.delauney.Test3D][suite]
+    - id: 1017
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/MustHave4NeighborExceptMostOuter/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(1)]
+      name: MustHave4NeighborExceptMostOuter(1)
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(1)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1025
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+    - id: 1018
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/MustHave4NeighborExceptMostOuter/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(2)]
+      name: MustHave4NeighborExceptMostOuter(2)
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(2)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1025
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+    - id: 1019
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/MustHave4NeighborExceptMostOuter/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(3)]
+      name: MustHave4NeighborExceptMostOuter(3)
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(3)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1025
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+    - id: 1020
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/MustHave4NeighborExceptMostOuter/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(4)]
+      name: MustHave4NeighborExceptMostOuter(4)
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(4)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1025
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+    - id: 1021
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/MustHave4NeighborExceptMostOuter/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(5)]
+      name: MustHave4NeighborExceptMostOuter(5)
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(5)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1025
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+    - id: 1022
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/MustHave4NeighborExceptMostOuter/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(10)]
+      name: MustHave4NeighborExceptMostOuter(10)
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(10)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1025
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+    - id: 1023
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/MustHave4NeighborExceptMostOuter/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(20)]
+      name: MustHave4NeighborExceptMostOuter(20)
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(20)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1025
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+    - id: 1024
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/MustHave4NeighborExceptMostOuter/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(30)]
+      name: MustHave4NeighborExceptMostOuter(30)
+      fullName: kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter(30)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1025
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.MustHave4NeighborExceptMostOuter][suite]
+    - id: 1007
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.Performance][suite]
+      name: Performance
+      fullName: kmty.geom.d3.delauney.Test3D.Performance
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1005
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/[EditorMode][kmty.geom.d3.delauney.Test3D][suite]
+    - id: 1006
+      uniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/Performance/[EditorMode][kmty.geom.d3.delauney.Test3D.Performance(100)]
+      name: Performance(100)
+      fullName: kmty.geom.d3.delauney.Test3D.Performance(100)
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1007
+      parentUniqueId: EditorMode.dll/kmty/geom/d3/delauney/Test3D/[EditorMode][kmty.geom.d3.delauney.Test3D.Performance][suite]
+    - id: 1043
+      uniqueId: '[Tests.dll][suite]'
+      name: Tests.dll
+      fullName: /Users/sakikomikado/dev/unity-delaunay-triangulation/Library/ScriptAssemblies/Tests.dll
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1000
+      parentUniqueId: '[unity-voronoi][suite]'
+    - id: 1044
+      uniqueId: Tests.dll/[kmty][suite]
+      name: kmty
+      fullName: kmty
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1043
+      parentUniqueId: '[Tests.dll][suite]'
+    - id: 1045
+      uniqueId: Tests.dll/kmty/[geom][suite]
+      name: geom
+      fullName: kmty.geom
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1044
+      parentUniqueId: Tests.dll/[kmty][suite]
+    - id: 1048
+      uniqueId: Tests.dll/kmty/geom/[d2][suite]
+      name: d2
+      fullName: kmty.geom.d2
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1045
+      parentUniqueId: Tests.dll/kmty/[geom][suite]
+    - id: 1049
+      uniqueId: Tests.dll/kmty/geom/d2/[Tests][kmty.geom.d2.test][suite]
+      name: test
+      fullName: kmty.geom.d2.test
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1048
+      parentUniqueId: Tests.dll/kmty/geom/[d2][suite]
+    - id: 1040
+      uniqueId: Tests.dll/kmty/geom/d2/test/[Tests][kmty.geom.d2.test.Test2D][suite]
+      name: Test2D
+      fullName: kmty.geom.d2.test.Test2D
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1049
+      parentUniqueId: Tests.dll/kmty/geom/d2/[Tests][kmty.geom.d2.test][suite]
+    - id: 1041
+      uniqueId: Tests.dll/kmty/geom/d2/test/Test2D/[Tests][kmty.geom.d2.test.Test2D.EquatableTest]
+      name: EquatableTest
+      fullName: kmty.geom.d2.test.Test2D.EquatableTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1040
+      parentUniqueId: Tests.dll/kmty/geom/d2/test/[Tests][kmty.geom.d2.test.Test2D][suite]
+    - id: 1042
+      uniqueId: Tests.dll/kmty/geom/d2/test/Test2D/[Tests][kmty.geom.d2.test.Test2D.TriangleTest]
+      name: TriangleTest
+      fullName: kmty.geom.d2.test.Test2D.TriangleTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1040
+      parentUniqueId: Tests.dll/kmty/geom/d2/test/[Tests][kmty.geom.d2.test.Test2D][suite]
+    - id: 1046
+      uniqueId: Tests.dll/kmty/geom/[d3][suite]
+      name: d3
+      fullName: kmty.geom.d3
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1045
+      parentUniqueId: Tests.dll/kmty/[geom][suite]
+    - id: 1047
+      uniqueId: Tests.dll/kmty/geom/d3/[Tests][kmty.geom.d3.test][suite]
+      name: test
+      fullName: kmty.geom.d3.test
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1046
+      parentUniqueId: Tests.dll/kmty/geom/[d3][suite]
+    - id: 1037
+      uniqueId: Tests.dll/kmty/geom/d3/test/[Tests][kmty.geom.d3.test.Test3D][suite]
+      name: Test3D
+      fullName: kmty.geom.d3.test.Test3D
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1047
+      parentUniqueId: Tests.dll/kmty/geom/d3/[Tests][kmty.geom.d3.test][suite]
+    - id: 1039
+      uniqueId: Tests.dll/kmty/geom/d3/test/Test3D/[Tests][kmty.geom.d3.test.Test3D.ConvexTestRandom]
+      name: ConvexTestRandom
+      fullName: kmty.geom.d3.test.Test3D.ConvexTestRandom
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1037
+      parentUniqueId: Tests.dll/kmty/geom/d3/test/[Tests][kmty.geom.d3.test.Test3D][suite]
+    - id: 1038
+      uniqueId: Tests.dll/kmty/geom/d3/test/Test3D/[Tests][kmty.geom.d3.test.Test3D.ConvexTestStatic]
+      name: ConvexTestStatic
+      fullName: kmty.geom.d3.test.Test3D.ConvexTestStatic
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1037
+      parentUniqueId: Tests.dll/kmty/geom/d3/test/[Tests][kmty.geom.d3.test.Test3D][suite]
+    m_ResultText: 'NodeDeepCopy (0.023s)
+
+      ---
+
+      1
+
+      2
+
+      0
+
+      1
+
+      0
+
+      1
+
+      1
+
+      0
+
+      0'
+    m_ResultStacktrace: 
+    m_TestListState:
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: 840301c5
+      m_LastClickedID: -989789308
+      m_ExpandedIDs: caacb1813d7a159150d1bd9ec56acfafccea7eb2c0c596ca4f73bdd3502871e0e020e9e0e557abf72d0e2e1379eea31751782b1c913a5f3ca42909467c525b4c729eb8503cef3351f6c502583809ea5930c2cc6598bd916bb3122a6d4a7e9571cb8dca71ffffff7f
+      m_RenameOverlay:
+        m_UserAcceptedRename: 0
+        m_Name: 
+        m_OriginalName: 
+        m_EditFieldRect:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        m_UserData: 0
+        m_IsWaitingForDelay: 0
+        m_IsRenaming: 0
+        m_OriginalEventType: 11
+        m_IsRenamingFilename: 0
+        m_ClientGUIView: {fileID: 0}
+      m_SearchString: 
+    m_TestRunnerUIFilter:
+      PassedHidden: 0
+      FailedHidden: 0
+      NotRunHidden: 0
+      m_SearchString: 
+      selectedCategoryMask: 0
+      availableCategories:
+      - Uncategorized
+--- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -356,7 +1395,7 @@ MonoBehaviour:
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
     m_SaveData: []
---- !u!114 &15
+--- !u!114 &18
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -378,9 +1417,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 761
+    y: 471
     width: 302.5
-    height: 318
+    height: 608
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
@@ -398,7 +1437,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Demo/3D
+    - Assets/BisterllarFlip
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 0
@@ -413,7 +1452,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 06700000
     m_LastClickedID: 28678
-    m_ExpandedIDs: 00000000ac510000ae510000b0510000b2510000b4510000
+    m_ExpandedIDs: 00000000a04d0000a24d0000a44d0000a64d0000a84d0000aa4d0000ac4d0000ae4d0000b04d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -441,23 +1480,23 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff00000000ac510000ae510000b0510000b2510000b4510000f0510000
+    m_ExpandedIDs: ffffffff00000000a04d0000a24d0000a44d0000a64d0000a84d0000aa4d0000ac4d0000ae4d0000b04d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Demo
+      m_OriginalName: Demo
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 19952
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 4}
+      m_ClientGUIView: {fileID: 7}
     m_SearchString: 
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
@@ -497,7 +1536,7 @@ MonoBehaviour:
     m_GridSize: 64
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 115
---- !u!114 &16
+--- !u!114 &19
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -518,10 +1557,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1428.5
+    x: 1408
     y: 83
-    width: 362.5
-    height: 996
+    width: 383
+    height: 431
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
@@ -529,7 +1568,7 @@ MonoBehaviour:
   m_ObjectsLockedBeforeSerialization: []
   m_InstanceIDsLockedBeforeSerialization: 
   m_PreviewResizer:
-    m_CachedPref: 160
+    m_CachedPref: 296
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
@@ -539,7 +1578,7 @@ MonoBehaviour:
   m_LockTracker:
     m_IsLocked: 0
   m_PreviewWindow: {fileID: 0}
---- !u!114 &17
+--- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -563,7 +1602,7 @@ MonoBehaviour:
     x: 0
     y: 83
     width: 302.5
-    height: 657
+    height: 367
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
@@ -571,9 +1610,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: f8510000
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 12faffff34fbffff
+      m_ExpandedIDs: 32cdffff92ceffff34d0ffffeed1ffff5ad3ffffd8d4ffff44f6ffffe2f7ffff2cfbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -589,7 +1628,7 @@ MonoBehaviour:
         m_IsRenaming: 0
         m_OriginalEventType: 11
         m_IsRenamingFilename: 0
-        m_ClientGUIView: {fileID: 0}
+        m_ClientGUIView: {fileID: 11}
       m_SearchString: 
     m_ExpandedScenes: []
     m_CurrenRootInstanceID: 0
@@ -597,7 +1636,7 @@ MonoBehaviour:
       m_IsLocked: 0
     m_CurrentSortingName: TransformSorting
   m_WindowGUID: f7a66a7b1cc474c4e96af0be06360420
---- !u!114 &18
+--- !u!114 &21
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -620,8 +1659,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 303.5
     y: 83
-    width: 1123
-    height: 657
+    width: 1102.5
+    height: 451
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
@@ -653,11 +1692,33 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
+      snapOffset: {x: 0, y: 26}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      id: unity-transform-toolbar
+      index: 0
+      layout: 2
+    - dockPosition: 1
+      containerId: overlay-toolbar__top
+      floating: 0
+      collapsed: 1
+      displayed: 1
+      snapOffset: {x: -111, y: 26}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 1
+      id: Orientation
+      index: 1
+      layout: 4
+    - dockPosition: 1
+      containerId: overlay-toolbar__top
+      floating: 0
+      collapsed: 0
+      displayed: 1
       snapOffset: {x: 0, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: unity-scene-view-toolbar
-      index: 0
+      index: 2
       layout: 1
     - dockPosition: 1
       containerId: overlay-toolbar__top
@@ -668,7 +1729,7 @@ MonoBehaviour:
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 1
       id: unity-search-toolbar
-      index: 1
+      index: 3
       layout: 1
     - dockPosition: 1
       containerId: overlay-toolbar__top
@@ -679,7 +1740,7 @@ MonoBehaviour:
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: Scene View/Open Tile Palette
-      index: 2
+      index: 4
       layout: 4
     - dockPosition: 1
       containerId: overlay-toolbar__top
@@ -690,29 +1751,7 @@ MonoBehaviour:
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: Scene View/Tilemap Focus
-      index: 3
-      layout: 4
-    - dockPosition: 0
-      containerId: overlay-container--left
-      floating: 0
-      collapsed: 0
-      displayed: 1
-      snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
-      snapCorner: 0
-      id: unity-transform-toolbar
-      index: 0
-      layout: 2
-    - dockPosition: 0
-      containerId: overlay-container--right
-      floating: 0
-      collapsed: 0
-      displayed: 1
-      snapOffset: {x: 67.5, y: 86}
-      snapOffsetDelta: {x: 0, y: 0}
-      snapCorner: 0
-      id: Orientation
-      index: 0
+      index: 5
       layout: 4
     - dockPosition: 1
       containerId: overlay-container--right
@@ -845,9 +1884,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.5, y: -0.5, z: 0.51}
+    m_Target: {x: 0, y: 0, z: 0}
     speed: 2
-    m_Value: {x: -0.5, y: -0.5, z: 0.51}
+    m_Value: {x: 0, y: 0, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -876,9 +1915,9 @@ MonoBehaviour:
       m_Size: {x: 1, y: 1}
     yGrid:
       m_Fade:
-        m_Target: 1
+        m_Target: 0
         speed: 2
-        m_Value: 1
+        m_Value: 0
       m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
       m_Pivot: {x: 0, y: 0, z: 0}
       m_Size: {x: 1, y: 1}
@@ -890,24 +1929,24 @@ MonoBehaviour:
       m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
       m_Pivot: {x: 0, y: 0, z: 0}
       m_Size: {x: 1, y: 1}
-    m_ShowGrid: 1
+    m_ShowGrid: 0
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.27894562, y: -0.4215603, z: 0.13806495, w: 0.8517183}
+    m_Target: {x: -0.27608263, y: 0.5755678, z: -0.21471554, w: -0.73927814}
     speed: 2
-    m_Value: {x: 0.27894425, y: -0.42155823, z: 0.13806428, w: 0.85171413}
+    m_Value: {x: -0.27606404, y: 0.57552904, z: -0.21470109, w: -0.73922837}
   m_Size:
-    m_Target: 7.916666
+    m_Target: 1.1111217
     speed: 2
-    m_Value: 7.586647
+    m_Value: 1.1111217
   m_Ortho:
     m_Target: 1
     speed: 2
     m_Value: 1
   m_CameraSettings:
-    m_Speed: 1.11843
-    m_SpeedNormalized: 0.557
+    m_Speed: 1.21992
+    m_SpeedNormalized: 0.60800004
     m_SpeedMin: 0.01
     m_SpeedMax: 2
     m_EasingEnabled: 1
@@ -925,7 +1964,7 @@ MonoBehaviour:
   m_SceneVisActive: 1
   m_LastLockedObject: {fileID: 0}
   m_ViewIsLockedToObject: 0
---- !u!114 &19
+--- !u!114 &22
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -946,10 +1985,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 303.5
-    y: 83
-    width: 1123
-    height: 657
+    x: 1408
+    y: 1000
+    width: 383
+    height: 79
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
@@ -960,7 +1999,7 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 1272, y: 1272}
+  m_TargetSize: {x: 116, y: 116}
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -975,10 +2014,10 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -318
-    m_HBaseRangeMax: 318
-    m_VBaseRangeMin: -318
-    m_VBaseRangeMax: 318
+    m_HBaseRangeMin: -29
+    m_HBaseRangeMax: 29
+    m_VBaseRangeMin: -29
+    m_VBaseRangeMax: 29
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -987,7 +2026,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -996,29 +2035,29 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 1123
-      height: 636
+      width: 383
+      height: 58
     m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 561.5, y: 318}
+    m_Translation: {x: 191.5, y: 29}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -561.5
-      y: -318
-      width: 1123
-      height: 636
+      x: -191.5
+      y: -29
+      width: 383
+      height: 58
     m_MinimalGUI: 1
   m_defaultScale: 1
-  m_LastWindowPixelSize: {x: 2246, y: 1314}
+  m_LastWindowPixelSize: {x: 766, y: 158}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 00000000000000000000
   m_XRRenderMode: 0
   m_RenderTexture: {fileID: 0}
---- !u!114 &20
+--- !u!114 &23
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1040,9 +2079,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 303.5
-    y: 761
-    width: 1123
-    height: 318
+    y: 555
+    width: 1102.5
+    height: 524
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default

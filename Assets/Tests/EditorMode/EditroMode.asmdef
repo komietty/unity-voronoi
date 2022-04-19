@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Unity.Mathematics",
         "kmty.geom",
-        "BistellarFlip3D"
+        "BistellarFlip3D",
+        "CSG"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace kmty.geom.d2.delaunay {
     public class Test2D {

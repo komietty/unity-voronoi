@@ -36,8 +36,10 @@ namespace kmty.geom.d3.delauney {
                             var g = new GameObject();
                             var f = g.AddComponent<MeshFilter>();
                             var r = g.AddComponent<MeshRenderer>();
+                            var c = g.AddComponent<MeshCollider>();
                             r.sharedMaterial = mat2;
                             f.mesh = n.Value.mesh;
+                            c.sharedMesh = n.Value.mesh;
                             g.transform.position = (float3)n.Value.center * 1.1f;
                             g.transform.SetParent(this.transform);
                     }
