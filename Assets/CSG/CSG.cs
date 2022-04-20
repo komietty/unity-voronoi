@@ -38,7 +38,9 @@ namespace kmty.geom.csg {
 
         public CSG Inverse(){
             var clone = new CSG(this);
-            System.Array.Reverse(clone.polygons);
+            for (var i = 0; i < clone.polygons.Length; i++) {
+                clone.polygons[i].Flip();
+            }
             return clone;
         }
 
@@ -46,11 +48,40 @@ namespace kmty.geom.csg {
             var this_n = new Node(this.polygons.ToList());
             var pair_n = new Node(pair.polygons.ToList());
             this_n.ClipTo(pair_n);
-            //pair_n.ClipTo(this_n);
-            //pair_n.Invert();
-            //pair_n.ClipTo(this_n);
-            //pair_n.Invert();
-            //this_n.Build(pair_n.GetPolygonsRecursiveBreakData());
+            pair_n.ClipTo(this_n);
+            pair_n.Invert();
+            pair_n.ClipTo(this_n);
+            pair_n.Invert();
+            this_n.Build(pair_n.GetPolygonsRecursiveBreakData());
+            var polygons = this_n.GetPolygonsRecursiveBreakData().ToArray();
+            return new CSG(polygons);
+        }
+
+        public CSG Subtraction(CSG pair){
+            var this_n = new Node(this.polygons.ToList());
+            var pair_n = new Node(pair.polygons.ToList());
+            this_n.Invert();
+            this_n.ClipTo(pair_n);
+            pair_n.ClipTo(this_n);
+            pair_n.Invert();
+            pair_n.ClipTo(this_n);
+            pair_n.Invert();
+            this_n.Build(pair_n.GetPolygonsRecursiveBreakData());
+            this_n.Invert();
+            var polygons = this_n.GetPolygonsRecursiveBreakData().ToArray();
+            return new CSG(polygons);
+        }
+
+        public CSG Intersection(CSG pair){
+            var this_n = new Node(this.polygons.ToList());
+            var pair_n = new Node(pair.polygons.ToList());
+            this_n.Invert();
+            pair_n.ClipTo(this_n);
+            pair_n.Invert();
+            this_n.ClipTo(pair_n);
+            pair_n.ClipTo(this_n);
+            this_n.Build(pair_n.GetPolygonsRecursiveBreakData());
+            this_n.Invert();
             var polygons = this_n.GetPolygonsRecursiveBreakData().ToArray();
             return new CSG(polygons);
         }
@@ -194,6 +225,13 @@ namespace kmty.geom.csg {
         public Plane plane { get; private set; }
         public List<Polygon> polygons { get; private set; }
 
+        public Node() {
+            this.nf = null;
+            this.nb = null;
+            this.plane = null;
+            this.polygons = new List<Polygon>();
+        }
+
         public Node(List<Polygon> polygons) {
             this.nf = null;
             this.nb = null;
@@ -233,8 +271,8 @@ namespace kmty.geom.csg {
             }
             if (this.nf != null) pf = this.nf.ClipPolygons(pf.ToArray()).ToList();
             if (this.nb != null) pb = this.nb.ClipPolygons(pb.ToArray()).ToList(); else pb.Clear();
-            Debug.Log(pf.Count);
-            Debug.Log(pb.Count);
+            //Debug.Log(pf.Count);
+            //Debug.Log(pb.Count);
             pf.AddRange(pb);
             return pf.ToArray();
         }
@@ -263,9 +301,9 @@ namespace kmty.geom.csg {
                 if (o.face != null) pf.Add(o.face);
                 if (o.back != null) pb.Add(o.back);
             }
-            Debug.Log($"ThisNode: {this.polygons.Count}, NF: {pf.Count}, NB: {pb.Count}");
-            if(pf.Count > 0) this.nf = new Node(pf);
-            if(pb.Count > 0) this.nb = new Node(pb);
+            //Debug.Log($"ThisNode: {this.polygons.Count}, NF: {pf.Count}, NB: {pb.Count}");
+            if (pf.Count > 0) { if (this.nf == null) this.nf = new Node(); this.nf.Build(pf); }
+            if (pb.Count > 0) { if (this.nb == null) this.nb = new Node(); this.nb.Build(pb); }
         }
     }
 }

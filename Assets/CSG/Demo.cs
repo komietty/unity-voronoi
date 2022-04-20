@@ -12,7 +12,7 @@ namespace kmty.geom.csg.demo {
         void Start() {
             var csg1 = Csgnize(g1);
             var csg2 = Csgnize(g2);
-            var csg3 = csg1.Union(csg2);
+            var csg3 = csg1.Subtraction(csg2);
             var mf  = GetComponent<MeshFilter>();
             var mf1 = g1.GetComponent<MeshFilter>();
             var mf2 = g2.GetComponent<MeshFilter>();
