@@ -28,13 +28,13 @@ namespace remesher {
         public static Mesh Create(Mesh original, out List<Vector3> new_vrts_list, out List<Vector3> new_nrms_list) {
             var vrts = original.vertices;
             var tris = original.triangles;
-            var uvs = original.uv;
+            //var uvs = original.uv;
             var nrms = original.normals;
             var tans = original.tangents;
             var bnws = original.boneWeights;
             var bdps = original.bindposes;
             var new_vrts = new Vector3[tris.Length];
-            var new_uvs  = new Vector2[tris.Length];
+            //var new_uvs  = new Vector2[tris.Length];
             var new_nrms = new Vector3[tris.Length];
             var new_tans = new Vector3[tris.Length];
             var new_tris = new int[tris.Length];
@@ -46,7 +46,7 @@ namespace remesher {
             for (int i = 0; i < tris.Length; i++) {
                 var t = tris[i];
                 new_vrts[i] = vrts[t];
-                new_uvs[i]  = uvs [t];
+                //new_uvs[i]  = uvs [t];
                 new_nrms[i] = nrms[t];
                 new_tans[i] = tans[t];
                 if (bnws.Length > 0) new_bnws[i] = bnws[t];
@@ -55,7 +55,7 @@ namespace remesher {
 
             mesh.vertices = new_vrts;
             mesh.triangles = new_tris;
-            mesh.uv = new_uvs;
+            //mesh.uv = new_uvs;
             mesh.boneWeights = new_bnws;
             mesh.bindposes = bdps;
             mesh.RecalculateNormals();

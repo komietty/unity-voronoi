@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Assertions;
 using UnityEngine;
+using UnityEngine.Assertions;
+using Unity.Mathematics;
 using System.Linq;
 
 namespace kmty.geom.csg {
-    using V3 = Vector3;
+    using d3 = double3;
 
     static class Util {
         public static T[] CloneArray<T>(T[] src){
@@ -30,11 +31,8 @@ namespace kmty.geom.csg {
     class CSG {
         public Polygon[] polygons { get; protected set; }
 
-        public CSG(Polygon[] polygons) { this.polygons = polygons; }
-
-        public CSG(CSG src) { // copy constructor
-            this.polygons = Util.ClonePolygons(src.polygons);
-        }
+        public CSG(Polygon[] src) { this.polygons = src; }
+        public CSG(CSG src) { this.polygons = Util.ClonePolygons(src.polygons); }
 
         public CSG Inverse(){
             var clone = new CSG(this);
@@ -48,11 +46,11 @@ namespace kmty.geom.csg {
             var this_n = new Node(this.polygons.ToList());
             var pair_n = new Node(pair.polygons.ToList());
             this_n.ClipTo(pair_n);
-            pair_n.ClipTo(this_n);
-            pair_n.Invert();
-            pair_n.ClipTo(this_n);
-            pair_n.Invert();
-            this_n.Build(pair_n.GetPolygonsRecursiveBreakData());
+            //pair_n.ClipTo(this_n);
+            //pair_n.Invert();
+            //pair_n.ClipTo(this_n);
+            //pair_n.Invert();
+            //this_n.Build(pair_n.GetPolygonsRecursiveBreakData());
             var polygons = this_n.GetPolygonsRecursiveBreakData().ToArray();
             return new CSG(polygons);
         }
@@ -88,38 +86,54 @@ namespace kmty.geom.csg {
     }
 
     public struct Vert {
-        public V3 pos { get; private set; }
-        public V3 nrm { get; private set; }
+        public d3 pos { get; private set; }
+        public d3 nrm { get; private set; }
 
-        public Vert(V3 p, V3 n) {
+        public Vert(d3 p, d3 n) {
             this.pos = p;
-            this.nrm = n.normalized;
+            this.nrm = math.normalize(n);
         }
 
         public Vert(Vert v) {
             this.pos = v.pos;
-            this.nrm = v.nrm.normalized;
+            this.nrm = math.normalize(v.nrm);
         }
 
         public void Flip() { this.nrm *= -1; }
-        public Vert Lerp(Vert pair, float t) {
+        public Vert Lerp(Vert pair, double t) {
             return new Vert(
-                V3.Lerp(this.pos, pair.pos, t),
-                V3.Slerp(this.nrm, pair.nrm, t)
+                math.lerp(this.pos, pair.pos, t),
+                math.lerp(this.nrm, pair.nrm, t) //slerp
             );
         }
     }
 
     public class Plane {
-        public V3 n { get; private set; }
-        public float w { get; private set; }
+        public d3 n { get; private set; }
+        public double w { get; private set; }
 
         enum Split { ONPLANE, FACE, BACK, SPAN }
-        static readonly float EPSILON = 1e-5f;
+        static readonly double EPSILON = 1e-5d;
 
-        public Plane(V3 a, V3 b, V3 c) {
-            this.n = V3.Cross(b - a, c - a).normalized;
-            this.w = V3.Dot(n, a); 
+        //public Plane(V3 a, V3 b, V3 c, V3 nrm) {
+        //    var n1 = V3.Cross(b - a, c - a).normalized;
+        //    var n2 = V3.Cross(c - a, b - a).normalized;
+        //    if (V3.Dot(n1, nrm) == 0) Debug.LogError(); 
+        //    if (V3.Dot(n1, nrm) > 0) this.n = n1;
+        //    else { this.n = n2;}
+        //    this.w = V3.Dot(n, a); 
+        //}
+
+        public Plane(Vert a, Vert b, Vert c) {
+            var n1 = math.normalize(math.cross(b.pos - a.pos, c.pos - a.pos));
+            var n2 = math.normalize(math.cross(c.pos - a.pos, b.pos - a.pos));
+            if (math.dot(n1, n2) > 0) { Debug.LogError(math.dot(n1, n2)); }
+            Assert.IsTrue(math.dot(n1, a.nrm) != 0);
+
+            if (math.dot(n1, a.nrm) > 0) { this.n = n1; }
+            else                         { this.n = n2; Debug.Log("rot vert order"); }
+
+            this.w = math.dot(n, a.pos);
         }
         
         public Plane(Plane src) { // copy constructor
@@ -132,9 +146,9 @@ namespace kmty.geom.csg {
             this.w *= -1;
         }
 
-        void DiffFromPlane(V3 p, out bool isNearPlane, out bool isFacingSide) {
-            var v = V3.Dot(n, p) - this.w;
-            isNearPlane  = Mathf.Abs(v) < EPSILON;
+        void DiffFromPlane(d3 p, out bool isNearPlane, out bool isFacingSide) {
+            var v = math.dot(n, p) - this.w;
+            isNearPlane  = math.abs(v) < EPSILON;
             isFacingSide = v > 0; 
         }
 
@@ -156,12 +170,13 @@ namespace kmty.geom.csg {
             switch ((Split)polySplit) {
                 default: throw new System.Exception();
                 case Split.ONPLANE:
-                    var f = V3.Dot(n, polygon.plane.n) > 0;
+                    var f = math.dot(n, polygon.plane.n) > 0;
                     if (f) return (polygon, null, null, null);
                     else   return (null, polygon, null, null);
                 case Split.FACE: return (null, null, polygon, null);
                 case Split.BACK: return (null, null, null, polygon);
                 case Split.SPAN:
+                    //Debug.LogWarning("aaa");
                     var faces = new List<Vert>();
                     var backs = new List<Vert>();
                     for (var i = 0; i < polygon.verts.Length; i++) {
@@ -173,7 +188,7 @@ namespace kmty.geom.csg {
                         if (si != (int)Split.BACK) faces.Add(vi);
                         if (si != (int)Split.FACE) backs.Add(si != (int)Split.BACK ? new Vert(vi) : vi); // need to be another clone??
                         if ((si | sj) == (int)Split.SPAN) {
-                            var t = (w - V3.Dot(n, vi.pos)) / V3.Dot(n, vj.pos - vi.pos);
+                            var t = (w - math.dot(n, vi.pos)) / math.dot(n, vj.pos - vi.pos);
                             var v = vi.Lerp(vj, t);
                             faces.Add(new Vert(v));
                             backs.Add(new Vert(v));
@@ -194,22 +209,14 @@ namespace kmty.geom.csg {
         public Vert[] verts { get; private set; }
         public Plane plane  { get; private set; }
 
-        public Polygon(Vert[] verts) {
-            this.verts = verts;
-            this.plane = new Plane(
-                this.verts[0].pos,
-                this.verts[1].pos,
-                this.verts[2].pos
-            );
+        public Polygon(Vert[] vs) {
+            this.verts = vs;
+            this.plane = new Plane(verts[0], verts[1], verts[2]);
         }
             
-        public Polygon(Polygon src) { // copy constructor
+        public Polygon(Polygon src) {
             this.verts = Util.CloneArray<Vert>(src.verts);
-            this.plane = new Plane(
-                this.verts[0].pos,
-                this.verts[1].pos,
-                this.verts[2].pos
-            );
+            this.plane = new Plane(verts[0], verts[1], verts[2]);
         }
 
         public void Flip(){
@@ -240,7 +247,7 @@ namespace kmty.geom.csg {
             Build(polygons);
         }
         
-        public Node(Node n) { // copy constructor
+        public Node(Node n) {
             this.polygons = Util.ClonePolygons(n.polygons);
             this.nf = n.nf != null ? new Node(n.nf) : null;
             this.nb = n.nb != null ? new Node(n.nb) : null;
@@ -249,9 +256,9 @@ namespace kmty.geom.csg {
 
         public void Invert() {
             for (var i = 0; i < this.polygons.Count; i++) this.polygons[i].Flip();
-            if(this.plane != null) plane.Flip();
-            if(this.nf != null) nf.Invert();
-            if(this.nb != null) nb.Invert();
+            plane?.Flip();
+            nf?.Invert();
+            nb?.Invert();
             var tmp = this.nf;
             this.nf = this.nb;
             this.nb = tmp;
@@ -271,8 +278,6 @@ namespace kmty.geom.csg {
             }
             if (this.nf != null) pf = this.nf.ClipPolygons(pf.ToArray()).ToList();
             if (this.nb != null) pb = this.nb.ClipPolygons(pb.ToArray()).ToList(); else pb.Clear();
-            //Debug.Log(pf.Count);
-            //Debug.Log(pb.Count);
             pf.AddRange(pb);
             return pf.ToArray();
         }
@@ -284,9 +289,10 @@ namespace kmty.geom.csg {
         }
 
         public List<Polygon> GetPolygonsRecursiveBreakData() {
-            if(nf != null) polygons.AddRange(nf.GetPolygonsRecursiveBreakData());
-            if(nb != null) polygons.AddRange(nb.GetPolygonsRecursiveBreakData());
-            return polygons;
+            var clone = Util.ClonePolygons(this.polygons);
+            if(nf != null) clone.AddRange(nf.GetPolygonsRecursiveBreakData());
+            if(nb != null) clone.AddRange(nb.GetPolygonsRecursiveBreakData());
+            return clone;
         }
 
         public void Build(List<Polygon> src) {
@@ -301,7 +307,6 @@ namespace kmty.geom.csg {
                 if (o.face != null) pf.Add(o.face);
                 if (o.back != null) pb.Add(o.back);
             }
-            //Debug.Log($"ThisNode: {this.polygons.Count}, NF: {pf.Count}, NB: {pb.Count}");
             if (pf.Count > 0) { if (this.nf == null) this.nf = new Node(); this.nf.Build(pf); }
             if (pb.Count > 0) { if (this.nb == null) this.nb = new Node(); this.nb.Build(pb); }
         }
