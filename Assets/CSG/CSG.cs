@@ -9,82 +9,79 @@ namespace kmty.geom.csg {
 
     static class Util {
         public static T[] CloneArray<T>(T[] src){
-            var dst = new T[src.Length];
-            System.Array.Copy(src, dst, src.Length);
-            return dst;
-        } 
-
-        public static List<T> CloneList<T>(List<T> src){
-            var dst = new List<T>();
-            for (var i = 0; i < src.Count; i++) dst.Add(src[i]);
-            return dst;
+            var l = src.Length;
+            var d = new T[l];
+            System.Array.Copy(src, d, l);
+            return d;
         } 
 
         public static Polygon[] ClonePolygons(Polygon[] src){
-            var dst = new Polygon[src.Length];
-            for (var i = 0; i < src.Length; i++) dst[i] = new Polygon(src[i]);
-            return dst;
+            var l = src.Length;
+            var d = new Polygon[l];
+            for (var i = 0; i < l; i++) d[i] = new Polygon(src[i]);
+            return d;
         } 
 
         public static List<Polygon> ClonePolygons(List<Polygon> src){
-            var dst = new List<Polygon>();
-            for (var i = 0; i < src.Count; i++) { dst.Add(new Polygon(src[i])); }
-            return dst;
+            var l = src.Count;
+            var d = new List<Polygon>();
+            for (var i = 0; i < l; i++) d.Add(new Polygon(src[i]));
+            return d;
         } 
     }
 
     public class CSG {
-        public Polygon[] polygons { get; protected set; }
+        public Polygon[] polygons { get; }
 
         public CSG(Polygon[] src) { this.polygons = src; }
         public CSG(CSG src) { this.polygons = Util.ClonePolygons(src.polygons); }
 
         public CSG Oparation(CSG pair, OparationType op) {
             switch(op){
-                case OparationType.Union:        return this.Union(pair); 
-                case OparationType.Subtraction:  return this.Subtraction(pair); 
-                case OparationType.Intersection: return this.Intersection(pair);
+                case OparationType.Union:        return Union(pair); 
+                case OparationType.Subtraction:  return Subtraction(pair); 
+                case OparationType.Intersection: return Intersection(pair);
                 default: throw new System.Exception();
             }
         }
 
         public CSG Union(CSG pair){
-            var this_n = new Node(new List<Polygon>(this.polygons));
-            var pair_n = new Node(new List<Polygon>(pair.polygons));
-            this_n.ClipTo(pair_n);
-            pair_n.ClipTo(this_n);
-            pair_n.Invert();
-            pair_n.ClipTo(this_n);
-            pair_n.Invert();
-            this_n.Build(pair_n.GetPolygonData());
-            return new CSG(this_n.GetPolygonData().ToArray());
+            var tn = new Node(new List<Polygon>(this.polygons));
+            var pn = new Node(new List<Polygon>(pair.polygons));
+            tn.ClipTo(pn);
+            pn.ClipTo(tn);
+            pn.Invert();
+            pn.ClipTo(tn);
+            pn.Invert();
+            tn.Build(pn.GetPolygonData());
+            return new CSG(tn.GetPolygonData().ToArray());
         }
 
         public CSG Subtraction(CSG pair){
-            var this_n = new Node(new List<Polygon>(this.polygons));
-            var pair_n = new Node(new List<Polygon>(pair.polygons));
-            this_n.Invert();
-            this_n.ClipTo(pair_n);
-            pair_n.ClipTo(this_n);
-            pair_n.Invert();
-            pair_n.ClipTo(this_n);
-            pair_n.Invert();
-            this_n.Build(pair_n.GetPolygonData());
-            this_n.Invert();
-            return new CSG(this_n.GetPolygonData().ToArray());
+            var tn = new Node(new List<Polygon>(this.polygons));
+            var pn = new Node(new List<Polygon>(pair.polygons));
+            tn.Invert();
+            tn.ClipTo(pn);
+            pn.ClipTo(tn);
+            pn.Invert();
+            pn.ClipTo(tn);
+            pn.Invert();
+            tn.Build(pn.GetPolygonData());
+            tn.Invert();
+            return new CSG(tn.GetPolygonData().ToArray());
         }
 
         public CSG Intersection(CSG pair){
-            var this_n = new Node(new List<Polygon>(this.polygons));
-            var pair_n = new Node(new List<Polygon>(pair.polygons));
-            this_n.Invert();
-            pair_n.ClipTo(this_n);
-            pair_n.Invert();
-            this_n.ClipTo(pair_n);
-            pair_n.ClipTo(this_n);
-            this_n.Build(pair_n.GetPolygonData());
-            this_n.Invert();
-            return new CSG(this_n.GetPolygonData().ToArray());
+            var tn = new Node(new List<Polygon>(this.polygons));
+            var pn = new Node(new List<Polygon>(pair.polygons));
+            tn.Invert();
+            pn.ClipTo(tn);
+            pn.Invert();
+            tn.ClipTo(pn);
+            pn.ClipTo(tn);
+            tn.Build(pn.GetPolygonData());
+            tn.Invert();
+            return new CSG(tn.GetPolygonData().ToArray());
         }
     }
 
@@ -116,8 +113,13 @@ namespace kmty.geom.csg {
         public d3 n     { get; private set; }
         public double w { get; private set; }
 
-        enum Split { ONPLANE, FACE, BACK, SPAN }
         static readonly double EPSILON = 1e-3d;
+        static readonly int ONPLANE = 0;
+        static readonly int FACE    = 1;
+        static readonly int BACK    = 2;
+        static readonly int SPAN    = 3;
+
+        public Plane(Plane src) { this.n = src.n; this.w = src.w; }
 
         public Plane(Vert a, Vert b, Vert c) {
             n = normalize(cross(b.pos - a.pos, c.pos - a.pos));
@@ -125,51 +127,50 @@ namespace kmty.geom.csg {
             if (dot(n, a.nrm) < 0 || dot(n, b.nrm) < 0 || dot(n, c.nrm) < 0) throw new System.Exception();
         }
         
-        public Plane(Plane src) { this.n = src.n; this.w = src.w; }
-
-        public void Flip() { this.n *= -1; this.w *= -1; }
-
-        void DiffFromPlane(d3 p, out bool isNearPlane, out bool isFacingSide) {
-            var v = dot(n, p) - this.w;
-            isNearPlane  = abs(v) < EPSILON;
-            isFacingSide = v > 0; 
+        public void Flip() {
+            this.n *= -1;
+            this.w *= -1;
         }
 
-        public (Polygon onPF, Polygon onPB, Polygon face, Polygon back) SplitPolygon(Polygon polygon) {
-            var l = polygon.verts.Length;
-            var polySplit = 0;
-            var vertSplit = new int[l];
+        int GetType(d3 p){
+            var v = dot(n, p) - this.w;
+            var isNearPlane  = abs(v) < EPSILON;
+            var isFacingSide = v > 0;
+            if (isNearPlane) return ONPLANE;
+            else             return isFacingSide ? FACE : BACK;
+        }
+
+        public (Polygon onPF, Polygon onPB, Polygon face, Polygon back) SplitPolygon(Polygon src) {
+            var l = src.verts.Length;
+            var pType = 0;
+            var vType = new int[l];
 
             for(var i = 0; i < l; i++) {
-                var v = polygon.verts[i]; 
-                int t;
-                DiffFromPlane(v.pos, out bool isNear, out bool isFace);
-                if (isNear) t = (int)Split.ONPLANE;
-                else t = isFace ? (int)Split.FACE : (int)Split.BACK;
-                polySplit |= t;
-                vertSplit[i] = t;
+                var t = GetType(src.verts[i].pos);
+                pType   |= t;
+                vType[i] = t;
             }
 
-            switch ((Split)polySplit) {
+            switch (pType) {
                 default: throw new System.Exception();
-                case Split.ONPLANE:
-                    var f = math.dot(n, polygon.plane.n) > 0;
-                    if (f) return (polygon, null, null, null);
-                    else   return (null, polygon, null, null);
-                case Split.FACE: return (null, null, polygon, null);
-                case Split.BACK: return (null, null, null, polygon);
-                case Split.SPAN:
+                case 0: return (dot(n, src.plane.n) > 0) ? (src, null, null, null) : (null, src, null, null);
+                case 1: return (null, null, src, null);
+                case 2: return (null, null, null, src);
+                case 3:
                     var faces = new List<Vert>();
                     var backs = new List<Vert>();
                     for (var i = 0; i < l; i++) {
                         var j = (i + 1) % l;
-                        var si = vertSplit[i];
-                        var sj = vertSplit[j];
-                        var vi = polygon.verts[i];
-                        var vj = polygon.verts[j];
-                        if (si != (int)Split.BACK) faces.Add(vi);
-                        if (si != (int)Split.FACE) backs.Add(si != (int)Split.BACK ? new Vert(vi) : vi); // need to be another clone??  //if (si != (int)Split.FACE) backs.Add(vi);
-                        if ((si | sj) == (int)Split.SPAN) {
+                        var si = vType[i];
+                        var sj = vType[j];
+                        var vi = src.verts[i];
+                        var vj = src.verts[j];
+
+                        if      (si == FACE) faces.Add(vi);
+                        else if (si == BACK) backs.Add(vi);
+                        else    { faces.Add(vi); backs.Add(vi); }
+
+                        if ((si | sj) == SPAN) {
                             var t = (w - dot(n, vi.pos)) / dot(n, vj.pos - vi.pos);
                             var v = vi.Lerp(vj, t);
                             faces.Add(new Vert(v));
@@ -214,8 +215,14 @@ namespace kmty.geom.csg {
         public Plane plane { get; private set; }
         public List<Polygon> polygons { get; private set; }
 
-        public Node() { this.polygons = new List<Polygon>(); }
-        public Node(List<Polygon> src) { this.polygons = new List<Polygon>(); Build(src); }
+        public Node() {
+            this.polygons = new List<Polygon>();
+        }
+
+        public Node(List<Polygon> src) {
+            this.polygons = new List<Polygon>();
+            Build(src);
+        }
         
         public Node(Node n) {
             this.polygons = Util.ClonePolygons(n.polygons);
@@ -235,7 +242,7 @@ namespace kmty.geom.csg {
         }
 
         List<Polygon> ClipPolygons(List<Polygon> src) {
-            if(this.plane == null) return Util.CloneList(src);
+            if(this.plane == null) return new List<Polygon>(src);
             var pf = new List<Polygon>();
             var pb = new List<Polygon>();
             for (var i = 0; i < src.Count; i++){
