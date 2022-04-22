@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.TestTools;
 
+/*
 namespace kmty.geom.csg {
     using V3 = Vector3;
     using d3 = double3;
@@ -107,3 +108,5 @@ namespace kmty.geom.csg {
         }
     }
 }
+
+*/
