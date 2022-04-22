@@ -17,7 +17,11 @@ namespace kmty.geom.csg.demo {
                 var csg4 = csg1.Oparation(csg2, op1);
                 mf.mesh = CSGUtil.Meshing(csg3.Oparation(csg4, op2));
             } else {
-                mf.mesh = CSGUtil.Meshing(csg1.Oparation(csg2,op1));
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                mf.mesh = CSGUtil.Meshing(csg1.Oparation(csg2, op1));
+                sw.Stop();
+                Debug.Log(sw.ElapsedMilliseconds + "ms");
             }
             foreach (Transform t in transform) { t.gameObject.SetActive(false); }
         }
