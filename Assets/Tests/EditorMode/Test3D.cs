@@ -15,14 +15,14 @@ namespace kmty.geom.d3.delauney {
         public void Performance([Values(100)] int num) {
             // takes 15.3 sec before refactor for 100 nums
             var sw = Stopwatch.StartNew();
-            var bf = new BistellarFlip3D(num);
+            var bf = new BistellarFlip3D(num, 1);
             sw.Stop();
             UnityEngine.Debug.Log(sw.Elapsed);
         }
 
         [Test]
         public void DelaunayTrianglesTest([ValueSource(nameof(nums))] int num) {
-            var bf = new BistellarFlip3D(num);
+            var bf = new BistellarFlip3D(num, 1);
             foreach (var n in bf.Nodes) {
                 var t = n.tetrahedra;
                 var c = n.tetrahedra.GetCircumscribedSphere();
@@ -49,7 +49,7 @@ namespace kmty.geom.d3.delauney {
 
         [Test]
         public void MustHave4NeighborExceptMostOuter([ValueSource(nameof(nums))]int num) {
-            var bf = new BistellarFlip3D(num);
+            var bf = new BistellarFlip3D(num, 1);
             var rt = new DN(new d3(0, 0, 0), new d3(3, 0, 0), new d3(0, 3, 0), new d3(0, 0, 3));
             bf.Nodes.ForEach(n => {
                 var t = n.tetrahedra;

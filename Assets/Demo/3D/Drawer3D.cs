@@ -25,7 +25,7 @@ namespace kmty.geom.d3.delauney {
 
 
         void Init() {
-            bf = new BistellarFlip3D(numPoint);
+            bf = new BistellarFlip3D(numPoint, 1);
             nodes = bf.Nodes.ToArray();
             voronoi = new VG(nodes);
             if (createMesh) {

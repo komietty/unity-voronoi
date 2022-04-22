@@ -66,7 +66,7 @@ namespace kmty.geom.csg {
         public d3 n     { get; private set; }
         public double w { get; private set; }
 
-        static readonly double EPSILON = 1e-3d;
+        static readonly double EPSILON = 1e-5d;
         static readonly int ONPLANE = 0;
         static readonly int FACE    = 1;
         static readonly int BACK    = 2;

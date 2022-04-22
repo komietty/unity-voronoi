@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -109,11 +107,21 @@ namespace kmty.geom.d3.delauney {
         protected Tetrahedra root;
         public List<DN> Nodes => nodes;
 
-        public BistellarFlip3D(int num) {
+        public BistellarFlip3D(int num, float scl) {
             stack = new Stack<TR>();
-            root = new Tetrahedra(new d3(0, 0, 0), new d3(3, 0, 0), new d3(0, 3, 0), new d3(0, 0, 3));
+            var s = scl * 3;
+            root = new Tetrahedra(
+                new d3(0, 0, 0),
+                new d3(s, 0, 0),
+                new d3(0, s, 0),
+                new d3(0, 0, s));
             nodes = new List<DN> { new DN(root) };
-            for (var i = 0; i < num; i++) { Split(new d3(UR.value, UR.value, UR.value)); Leagalize(); }
+
+            for (var i = 0; i < num; i++) {
+                Split(UR.value * scl, UR.value * scl, UR.value * scl);
+                Leagalize();
+            }
+
             //nodes = nodes.Where(n => 
             //        !n.tetrahedra.HasPoint(root.a) &&
             //        !n.tetrahedra.HasPoint(root.b) &&
@@ -122,6 +130,7 @@ namespace kmty.geom.d3.delauney {
             //        ).ToList();
         }
 
+        void Split(float x, float y, float z) { Split(new d3(x, y, z)); }
         void Split(d3 p) {
             var n = nodes.Find(_t => _t.tetrahedra.Contains(p, true));
             var o = n.Split(p);
@@ -162,7 +171,7 @@ namespace kmty.geom.d3.delauney {
                             if      (Util3D.IsIntersecting(new SG(i, t.a), new SG(t.b, t.c), 1e-15d)) far = t.a;
                             else if (Util3D.IsIntersecting(new SG(i, t.b), new SG(t.c, t.a), 1e-15d)) far = t.b;
                             else if (Util3D.IsIntersecting(new SG(i, t.c), new SG(t.a, t.b), 1e-15d)) far = t.c;
-                            else throw new Exception();
+                            else throw new System.Exception();
 
                             var cm = t.Remaining(far);
                             var t3 = new TR(cm, p1);
