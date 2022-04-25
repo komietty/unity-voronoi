@@ -5,7 +5,7 @@ namespace kmty.geom.csg {
     using static Unity.Mathematics.math;
     using d3 = double3;
 
-    public enum OpType { Union, Subtraction, Intersection }
+    public enum OpType { Union, Subtraction, Intersection, Clip }
 
     public class CsgTree {
         public Polygon[] polygons { get; }
@@ -18,6 +18,7 @@ namespace kmty.geom.csg {
                 case OpType.Union:        return Union(pair); 
                 case OpType.Subtraction:  return Subtraction(pair); 
                 case OpType.Intersection: return Intersection(pair);
+                case OpType.Clip:         return Clip(pair);
                 default: throw new System.Exception();
             }
         }
@@ -58,6 +59,13 @@ namespace kmty.geom.csg {
             pn.ClipTo(tn);
             tn.Build(pn.GetPolygonData());
             tn.Invert();
+            return new CsgTree(tn.GetPolygonData().ToArray());
+        }
+
+        public CsgTree Clip(CsgTree pair){
+            var tn = new Node(new List<Polygon>(this.polygons));
+            var pn = new Node(new List<Polygon>(pair.polygons));
+            tn.ClipTo(pn);
             return new CsgTree(tn.GetPolygonData().ToArray());
         }
     }

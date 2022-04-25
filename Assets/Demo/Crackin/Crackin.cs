@@ -35,8 +35,8 @@ public class Crackin : MonoBehaviour {
                     var f = g.AddComponent<MeshFilter>();
                     var r = g.AddComponent<MeshRenderer>();
                     r.sharedMaterial = mat;
-                    //f.mesh = n.Value.mesh;
-                    f.mesh = Weld(n.Value.mesh);
+                    f.mesh = n.Value.mesh;
+                    //f.mesh = Weld(n.Value.mesh);
                     g.transform.position = (float3)n.Value.center;
                     g.transform.SetParent(this.transform);
                     meshes.Add(g.transform);
@@ -46,10 +46,11 @@ public class Crackin : MonoBehaviour {
 
             mesh = meshes[0].GetComponent<MeshFilter>().sharedMesh;
 
-            var t1 = CSG.GenCsgTree(tgt.transform);
+            var tree = CSG.GenCsgTree(tgt.transform);
             for (var i = 0; i < meshes.Count; i++) {
-                //var t2 = CSG.GenCsgTree(meshes[i], true);
-                var t2 = CSG.GenCsgTree(meshes[i]);
+                var t1 = new CsgTree(tree);
+                var t2 = CSG.GenCsgTree(meshes[i], true);
+                //var t2 = CSG.GenCsgTree(meshes[i]);
                 var o = CSG.Meshing(t1.Oparation(t2, op1));
                 var g = new GameObject(i.ToString());
                 var f = g.AddComponent<MeshFilter>();
