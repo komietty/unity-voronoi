@@ -33,7 +33,8 @@ namespace kmty.geom.d3.delauney {
                 foreach (var n in voronoi.nodes) {
                     if (true || count == debugVNodeId) {
                         n.Value.Meshilify();
-                            var g = new GameObject();
+                        if (n.Value.mesh != null) {
+                            var g = new GameObject(count.ToString());
                             var f = g.AddComponent<MeshFilter>();
                             var r = g.AddComponent<MeshRenderer>();
                             var c = g.AddComponent<MeshCollider>();
@@ -42,6 +43,7 @@ namespace kmty.geom.d3.delauney {
                             c.sharedMesh = n.Value.mesh;
                             g.transform.position = (float3)n.Value.center * 1.1f;
                             g.transform.SetParent(this.transform);
+                        }
                     }
                     count++;
                 }
@@ -64,7 +66,7 @@ namespace kmty.geom.d3.delauney {
                     Gizmos.DrawWireSphere(c, 0.02f);
                     foreach (var f in n.Value.faces) {
                         Gizmos.color = Color.cyan;
-                        Gizmos.DrawWireSphere((float3)f.faceCenter, 0.01f);
+                        //Gizmos.DrawWireSphere((float3)f.faceCenter, 0.01f);
                     }
                 }
                 count++;

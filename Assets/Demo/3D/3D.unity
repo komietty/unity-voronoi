@@ -549,7 +549,7 @@ MonoBehaviour:
   createMesh: 1
   showDebugCube: 0
   showDelaunay: 0
-  showVoronoi: 1
+  showVoronoi: 0
   debugDNodeId: 0
   debugVNodeId: 9
 --- !u!4 &1349591346

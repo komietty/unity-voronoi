@@ -9,11 +9,16 @@ namespace kmty.geom.csg {
 
     public static class CSG {
 
-        public static CsgTree GenCsgTree(Transform t){
+        public static CsgTree GenCsgTree(Transform t, bool isFragmentized = false) {
             var mf = t.GetComponent<MeshFilter>();
             var vs = new List<Vector3>();
             var ns = new List<Vector3>();
-            Fragmentize(mf.sharedMesh, out vs, out ns);
+            if (isFragmentized) {
+                mf.sharedMesh.GetVertices(vs);
+                mf.sharedMesh.GetNormals(ns);
+            } else {
+                Fragmentize(mf.sharedMesh, out vs, out ns);
+            }
             Assert.IsTrue(vs.Count % 3 == 0);
 
             var verts = new (d3 pos, d3 nrm)[vs.Count];

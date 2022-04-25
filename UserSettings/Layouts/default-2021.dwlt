@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 142
+  controlID: 130
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -269,8 +269,8 @@ MonoBehaviour:
     y: 741
     width: 1104.5
     height: 276
-  m_MinSize: {x: 102, y: 121}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 300}
   m_MaxSize: {x: 8096, y: 24288}
   vertical: 1
-  controlID: 120
+  controlID: 150
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -321,8 +321,8 @@ MonoBehaviour:
     y: 0
     width: 384
     height: 671
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 21}
   m_Panes:
   - {fileID: 21}
@@ -441,9 +441,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 565e0000
-      m_LastClickedID: 24150
-      m_ExpandedIDs: ca9dfdffeee7ffff66f0ffffa2f0ffff94f8ffff34fbffffe64d00003e5e0000
+      m_SelectedIDs: 04a3ffff
+      m_LastClickedID: -23804
+      m_ExpandedIDs: 34fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -524,7 +524,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 06700000
     m_LastClickedID: 28678
-    m_ExpandedIDs: 000000006e4d0000704d0000724d0000744d0000764d0000784d00007a4d00007c4d00007e4d0000
+    m_ExpandedIDs: 00000000c44d0000c64d0000c84d0000ca4d0000cc4d0000ce4d0000d04d0000d24d0000d44d0000d64d0000d84d0000da4d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -549,24 +549,24 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_AssetTreeState:
-    scrollPos: {x: 0, y: 78}
+    scrollPos: {x: 0, y: 126}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff000000006e4d0000704d0000724d0000744d0000764d0000784d00007a4d00007c4d00007e4d0000b04d0000be4d0000004e0000
+    m_ExpandedIDs: ffffffff00000000c44d0000c64d0000c84d0000ca4d0000cc4d0000ce4d0000d04d0000d24d0000d44d0000d64d0000d84d0000da4d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: CSG
-      m_OriginalName: CSG
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 19988
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 8}
     m_SearchString: 
@@ -856,9 +856,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.5054083, y: 1.4507033, z: -0.51050246}
+    m_Target: {x: 0.8300545, y: 0.5358923, z: 0.17474806}
     speed: 2
-    m_Value: {x: -0.5054083, y: 1.4507033, z: -0.51050246}
+    m_Value: {x: 0.8300545, y: 0.5358923, z: 0.17474806}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -905,20 +905,20 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.07145908, y: -0.9277301, z: 0.27047026, w: 0.2475527}
+    m_Target: {x: 0.12677754, y: 0.5955271, z: -0.09488734, w: 0.7877369}
     speed: 2
-    m_Value: {x: 0.071451, y: -0.92762524, z: 0.27043968, w: 0.24752472}
+    m_Value: {x: 0.1267612, y: 0.5954503, z: -0.094875105, w: 0.7876353}
   m_Size:
-    m_Target: 1.4909856
+    m_Target: 0.6203576
     speed: 2
-    m_Value: 1.4820931
+    m_Value: 0.6194284
   m_Ortho:
     m_Target: 1
     speed: 2
     m_Value: 1
   m_CameraSettings:
-    m_Speed: 0.6995099
-    m_SpeedNormalized: 0.3464874
+    m_Speed: 0.3413099
+    m_SpeedNormalized: 0.1664874
     m_SpeedMin: 0.01
     m_SpeedMax: 2
     m_EasingEnabled: 1
@@ -1036,7 +1036,7 @@ MonoBehaviour:
     m_LastAppliedPresetName: Default
     m_SaveData: []
   m_Spl:
-    ID: 177
+    ID: 178
     splitterInitialOffset: 0
     currentActiveSplitter: -1
     realSizes:
