@@ -27,23 +27,19 @@ public class Crackin : MonoBehaviour {
             var meshes = new List<Transform>();
             var count = 0;
             foreach (var n in voronoi.nodes) {
-                if (math.abs(n.Value.center.x - scale * 0.5f) < scale * 0.45f &&
-                    math.abs(n.Value.center.y - scale * 0.5f) < scale * 0.45f &&
-                    math.abs(n.Value.center.z - scale * 0.5f) < scale * 0.45f
-                    ) {
-                    if (targetID == -1 || count == targetID) {
-                        n.Value.Meshilify();
-                        var g = new GameObject(count.ToString());
-                        var f = g.AddComponent<MeshFilter>();
-                        var r = g.AddComponent<MeshRenderer>();
-                        r.sharedMaterial = mat;
-                        f.mesh = n.Value.mesh;
-                        g.transform.position = (float3)n.Value.center;
-                        g.transform.SetParent(this.transform);
-                        meshes.Add(g.transform);
-                    }
-                    count++;
+                if ((targetID == -1 || count == targetID)) {
+                    n.Value.Meshilify();
+                    if(n.Value.mesh == null) continue;
+                    var g = new GameObject(count.ToString());
+                    var f = g.AddComponent<MeshFilter>();
+                    var r = g.AddComponent<MeshRenderer>();
+                    r.sharedMaterial = mat;
+                    f.mesh = n.Value.mesh;
+                    g.transform.position = (float3)n.Value.center;
+                    g.transform.SetParent(this.transform);
+                    meshes.Add(g.transform);
                 }
+                count++;
             }
 
             mesh = meshes[0].GetComponent<MeshFilter>().sharedMesh;

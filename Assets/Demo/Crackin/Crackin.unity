@@ -296,7 +296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &234869515
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -346,7 +346,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 234869514}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &234869517
 Transform:
   m_ObjectHideFlags: 0
@@ -355,7 +355,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 234869514}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.51, y: 0.53, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -613,7 +613,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &1318616303
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -723,12 +723,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2ad9fef23cbc42c8a3f1bf2182768bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tgt: {fileID: 1318616302}
+  tgt: {fileID: 234869514}
   op1: 2
   mat: {fileID: 2100000, guid: e18e423e53804534aaf1b8e963260683, type: 2}
-  numPoint: 100
+  numPoint: 10
   targetID: -1
-  scale: 2
+  scale: 1
   mesh: {fileID: 0}
   BakePath: Assets/BakedAssets
   BakeName: Voronoi

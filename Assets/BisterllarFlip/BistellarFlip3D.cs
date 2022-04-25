@@ -267,8 +267,12 @@ namespace kmty.geom.d3.delauney {
             var flg = false;
             var c = bgn.a;
 
-            foreach (var s in segments) {
-                if (all(c == s.a) || all(c == s.b)) { end = s; flg = true; }
+            for (var j = 1; j < segments.Count; j++) {
+                var s = segments[j];
+                if (all(c == s.a) || all(c == s.b)) {
+                    end = s;
+                    flg = true;
+                }
             }
 
             if (!flg) return new d3[0]; 
@@ -278,9 +282,9 @@ namespace kmty.geom.d3.delauney {
 
             foreach (var s in segments) {
                 if (s.Equals(end) || s.Equals(bgn)) continue;
-                var vc = c   - nodeCenter;
                 var va = s.a - nodeCenter;
                 var vb = s.b - nodeCenter;
+                var vc = c   - nodeCenter;
                 var f = dot(cross(vb - va, vc - va), vc) > 0;
                 vts[itr * 3 + 0] = vc;
                 vts[itr * 3 + 1] = f ? va : vb;
