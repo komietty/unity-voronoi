@@ -11,11 +11,13 @@ namespace kmty.geom.crackin {
 
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
+            /*
             EditorGUILayout.Space(1);
             if (GUILayout.Button("Bake Mesh")) {
                 var path = $"{handler.BakePath}/{handler.BakeName}.asset";
                 CreateOrUpdate(handler.mesh, path);
             }
+            */
         }
 
         void CreateOrUpdate(Object altAsset, string assetPath) {

@@ -207,26 +207,24 @@ namespace kmty.geom.d3.delauney {
 
     public class VoronoiGraphFace3D {
         public Vector3 key;
-        //public List<SG> segments;
-        public List<d3> vrts;
+        public List<SG> segments = new List<SG>();
+        public List<d3> vrts = new List<d3>();
         public d3 nodeCenter;
 
         public VoronoiGraphFace3D(Vector3 key, d3 nodeCenter) {
             this.key = key;
             this.nodeCenter = nodeCenter;
-            this.vrts = new List<d3>();
-            //this.segments = new List<SG>();
         }
 
-        public void TryAddVrts(SG s){
+        public void TryAddVrts(SG s, d3 center){
             bool f1 = false;
             bool f2 = false;
             foreach (var v in vrts) {
-                if(all(v == s.a)) f1 = true;
-                if(all(v == s.b)) f2 = true;
+                if(all(v == s.a - center)) f1 = true;
+                if(all(v == s.b - center)) f2 = true;
             }
-            if(!f1) vrts.Add(s.a);
-            if(!f2) vrts.Add(s.b);
+            if(!f1) vrts.Add(s.a - center);
+            if(!f2) vrts.Add(s.b - center);
         }
 
 
@@ -244,20 +242,19 @@ namespace kmty.geom.d3.delauney {
             for (var i = 1; i < vrts.Count; i++) {
                 var va = vrts[i];
                 var vb = vrts[(i + 1) % vrts.Count];
-                if (dot(cross(vb - va, v0 - va), v0 - nodeCenter) > 0) {
-                    alts.Add(v0 - nodeCenter);
-                    alts.Add(va - nodeCenter);
-                    alts.Add(vb - nodeCenter);
+                if (dot(cross(vb - va, v0 - va), v0) > 0) {
+                    alts.Add(v0);
+                    alts.Add(va);
+                    alts.Add(vb);
                 } else {
-                    alts.Add(v0 - nodeCenter);
-                    alts.Add(vb - nodeCenter);
-                    alts.Add(va - nodeCenter);
+                    alts.Add(v0);
+                    alts.Add(vb);
+                    alts.Add(va);
                 }
             }
             return alts.ToArray();
         }
 
-/*
         public bool TryAddSegs(SG s) {
             if (segments.Any(i => i.EqualsIgnoreDirection(s))) return false;
             segments.Add(s);
@@ -265,28 +262,13 @@ namespace kmty.geom.d3.delauney {
         }
 
         public d3[] Meshilify_F() {
-            if (segments.Count != verts.Count) {
-                Debug.LogWarning($"s: {segments.Count}, v: {verts.Count} ========");
-                foreach (var v in verts) {
-                    if(!segments.Any(s => s.Contains(v))) Debug.Log(v);
-                }
-                foreach (var s in segments) {
-                    if(!verts.Any(v => all(v == s.a))) Debug.Log($"a: {s.a}");
-                    if(!verts.Any(v => all(v == s.b))) Debug.Log($"b: {s.b}");
-                }
-            }
-
             var bgn = segments[0];
             var end = new SG(d3.zero, new d3(1, 1, 1));
             var flg = false;
             var c = bgn.a;
 
-            for (var j = 1; j < segments.Count; j++) {
-                var s = segments[j];
-                if (all(c == s.a) || all(c == s.b)) {
-                    end = s;
-                    flg = true;
-                }
+            foreach (var s in segments) {
+                if (all(c == s.a) || all(c == s.b)) { end = s; flg = true; }
             }
 
             if (!flg) return new d3[0]; 
@@ -296,20 +278,19 @@ namespace kmty.geom.d3.delauney {
 
             foreach (var s in segments) {
                 if (s.Equals(end) || s.Equals(bgn)) continue;
-                if (dot(cross(s.b - s.a, c - s.a), c - nodeCenter) > 0) {
-                    vts[itr * 3 + 0] = c   - nodeCenter;
-                    vts[itr * 3 + 1] = s.a - nodeCenter;
-                    vts[itr * 3 + 2] = s.b - nodeCenter;
-                } else {
-                    vts[itr * 3 + 0] = c   - nodeCenter;
-                    vts[itr * 3 + 1] = s.b - nodeCenter;
-                    vts[itr * 3 + 2] = s.a - nodeCenter;
-                }
+                var vc = c   - nodeCenter;
+                var va = s.a - nodeCenter;
+                var vb = s.b - nodeCenter;
+                var f = dot(cross(vb - va, vc - va), vc) > 0;
+                vts[itr * 3 + 0] = vc;
+                vts[itr * 3 + 1] = f ? va : vb;
+                vts[itr * 3 + 2] = f ? vb : va;
                 itr++;
             }
 
             return vts;
         }
+/*
 */
     }
 
@@ -330,7 +311,8 @@ namespace kmty.geom.d3.delauney {
 
             foreach (var s in segments) {
                 foreach (var f in faces) {
-                    if (s.pair == f.key) f.TryAddVrts(s.segment);
+                    //if (s.pair == f.key) f.TryAddVrts(s.segment, center);
+                    if (s.pair == f.key) f.TryAddSegs(s.segment);
                 }
             }
            
@@ -339,7 +321,8 @@ namespace kmty.geom.d3.delauney {
             var closed = true;
 
             foreach (var f in faces) {
-                var vs = f.Meshilify();
+                //var vs = f.Meshilify();
+                var vs = f.Meshilify_F();
                 closed &= vs.Length > 0;
                 nums += vs.Length;
                 vrts.AddRange(vs.Select(v => (Vector3)(float3)v));
