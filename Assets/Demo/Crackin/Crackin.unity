@@ -355,8 +355,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 234869514}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.51, y: 0.53, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -728,7 +728,7 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: e18e423e53804534aaf1b8e963260683, type: 2}
   numPoint: 10
   targetID: -1
-  scale: 1
+  scale: 10
   mesh: {fileID: 0}
   BakePath: Assets/BakedAssets
   BakeName: Voronoi
