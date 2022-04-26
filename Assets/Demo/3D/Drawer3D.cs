@@ -97,8 +97,8 @@ namespace kmty.geom.d3.delauney {
                 if (count == debugVNodeId) {
                     foreach (var s in n.Value.segments) {
                         mat.SetPass(3);
-                        GL.Vertex((f3)s.segment.a);
-                        GL.Vertex((f3)s.segment.b);
+                        GL.Vertex((f3)s.sg.a);
+                        GL.Vertex((f3)s.sg.b);
                     }
                 }
                 count++;

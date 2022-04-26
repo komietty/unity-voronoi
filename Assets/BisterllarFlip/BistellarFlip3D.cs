@@ -230,23 +230,23 @@ namespace kmty.geom.d3.delauney {
         public d3[] Meshilify() {
             var v0 = vrts[0];
             var v1 = vrts[1];
-            var alts = new List<d3>();
+            var o  = new d3[(vrts.Count - 2) * 3];
 
             vrts = vrts.Skip(2)
-                       .OrderByDescending(v => dot(v1 - v0, normalize(v - v1)))
+                       .OrderBy(v => dot(v0 - v1, normalize(v - v1)))
                        .Prepend(v1)
                        .Prepend(v0)
                        .ToList();
 
-            for (var i = 1; i < vrts.Count; i++) {
+            for (var i = 1; i < vrts.Count - 1; i++) {
                 var va = vrts[i];
-                var vb = vrts[(i + 1) % vrts.Count];
+                var vb = vrts[i + 1];
                 var f  = dot(cross(vb - va, v0 - va), v0) > 0;
-                alts.Add(v0);
-                alts.Add(f ? va : vb);
-                alts.Add(f ? vb : va);
+                o[(i - 1) * 3 + 0] = v0;
+                o[(i - 1) * 3 + 1] = f ? va : vb;
+                o[(i - 1) * 3 + 2] = f ? vb : va;
             }
-            return alts.ToArray();
+            return o;
         }
 
     }
@@ -254,7 +254,7 @@ namespace kmty.geom.d3.delauney {
     public class VoronoiGraphNode3D {
         public d3 center;
         public Mesh mesh;
-        public List<(SG segment, Vector3 pair)> segments;
+        public List<(SG sg, Vector3 pair)> segments;
         public List<VF> faces;
         public VoronoiGraphNode3D(d3 c) {
             this.center = c;
@@ -270,7 +270,7 @@ namespace kmty.geom.d3.delauney {
                 for (var j = 0; j < faces.Count; j++) {
                     var s = segments[i];
                     var f = faces[j];
-                    if (s.pair == f.key) f.TryAddVrts(s.segment, center);
+                    if (s.pair == f.key) f.TryAddVrts(s.sg, center);
                 }
             }
            
