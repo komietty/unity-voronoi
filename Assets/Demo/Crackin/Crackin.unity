@@ -1036,11 +1036,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2ad9fef23cbc42c8a3f1bf2182768bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tgt: {fileID: 1798374489}
+  tgt: {fileID: 234869514}
   phy: {fileID: 13400000, guid: 33ea9d234830b473cb0760d693217e66, type: 2}
   op1: 2
   mat: {fileID: 2100000, guid: e18e423e53804534aaf1b8e963260683, type: 2}
-  numPoint: 100
+  numPoint: 30
   targetID: -1
   scale: 2
   mesh: {fileID: 0}

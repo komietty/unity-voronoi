@@ -80,6 +80,7 @@ public class Crackin : MonoBehaviour {
         }
 
         void OnDrawGizmosSelected(){
+            Gizmos.color = Color.gray;
             Gizmos.DrawWireCube(Vector3.one * scale / 2, Vector3.one * scale);
         }
     }

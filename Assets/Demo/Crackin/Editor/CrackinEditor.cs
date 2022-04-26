@@ -16,8 +16,6 @@ namespace kmty.geom.crackin {
                 var path = $"{handler.BakePath}/{handler.BakeName}.asset";
                 CreateOrUpdate(handler.mesh, path);
             }
-            /*
-            */
         }
 
         void CreateOrUpdate(Object altAsset, string assetPath) {
