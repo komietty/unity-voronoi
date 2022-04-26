@@ -9,12 +9,13 @@ namespace kmty.geom.crackin {
         protected int selectedId = -1;
         protected Crackin handler => (Crackin)target;
 
+/*
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
             EditorGUILayout.Space(1);
             if (GUILayout.Button("Bake Mesh")) {
                 var path = $"{handler.BakePath}/{handler.BakeName}.asset";
-                CreateOrUpdate(handler.mesh, path);
+                CreateOrUpdate(handler.bakable, path);
             }
         }
 
@@ -27,5 +28,6 @@ namespace kmty.geom.crackin {
                 AssetDatabase.SaveAssets();
             }
         }
+*/
     }
 }
