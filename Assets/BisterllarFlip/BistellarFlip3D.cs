@@ -209,11 +209,11 @@ namespace kmty.geom.d3.delauney {
         public Vector3 key;
         public List<SG> segments = new List<SG>();
         public List<d3> vrts = new List<d3>();
-        public d3 nodeCenter;
+        public d3 center;
 
         public VoronoiGraphFace3D(Vector3 key, d3 nodeCenter) {
             this.key = key;
-            this.nodeCenter = nodeCenter;
+            this.center = nodeCenter;
         }
 
         public void TryAddVrts(SG s, d3 center){
@@ -282,9 +282,9 @@ namespace kmty.geom.d3.delauney {
 
             foreach (var s in segments) {
                 if (s.Equals(end) || s.Equals(bgn)) continue;
-                var va = s.a - nodeCenter;
-                var vb = s.b - nodeCenter;
-                var vc = c   - nodeCenter;
+                var va = s.a - center;
+                var vb = s.b - center;
+                var vc = c   - center;
                 var f = dot(cross(vb - va, vc - va), vc) > 0;
                 vts[itr * 3 + 0] = vc;
                 vts[itr * 3 + 1] = f ? va : vb;
@@ -315,8 +315,8 @@ namespace kmty.geom.d3.delauney {
 
             foreach (var s in segments) {
                 foreach (var f in faces) {
-                    //if (s.pair == f.key) f.TryAddVrts(s.segment, center);
-                    if (s.pair == f.key) f.TryAddSegs(s.segment);
+                    if (s.pair == f.key) f.TryAddVrts(s.segment, center);
+                    //if (s.pair == f.key) f.TryAddSegs(s.segment);
                 }
             }
            
@@ -325,8 +325,8 @@ namespace kmty.geom.d3.delauney {
             var closed = true;
 
             foreach (var f in faces) {
-                //var vs = f.Meshilify();
-                var vs = f.Meshilify_F();
+                var vs = f.Meshilify();
+                //var vs = f.Meshilify_F();
                 closed &= vs.Length > 0;
                 nums += vs.Length;
                 vrts.AddRange(vs.Select(v => (Vector3)(float3)v));

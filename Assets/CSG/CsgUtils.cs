@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Mathematics;
-using UnityEngine.Assertions;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -19,7 +18,6 @@ namespace kmty.geom.csg {
             } else {
                 Fragmentize(mf.sharedMesh, out vs, out ns);
             }
-            Assert.IsTrue(vs.Count % 3 == 0);
 
             var verts = new (d3 pos, d3 nrm)[vs.Count];
             var polys = new Polygon[vs.Count / 3];
@@ -38,7 +36,6 @@ namespace kmty.geom.csg {
                     polys[i] = new Polygon(new d3[] { a.pos, b.pos, c.pos });
                 } else {
                     polys[i] = new Polygon(new d3[] { a.pos, c.pos, b.pos });
-                    Debug.LogWarning("vertices order is clockwise");
                 }
             }
             return new CsgTree(polys);
@@ -47,10 +44,9 @@ namespace kmty.geom.csg {
         public static Mesh Meshing(CsgTree tree){
             var vs = new List<Vector3>();
             var ns = new List<Vector3>();
-            var ts = new List<int>();
             var dst = new Mesh();
             dst.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-            var count = 0;
+            var num = 0;
             for (var j = 0; j < tree.polygons.Length; j++) {
                 var p = tree.polygons[j];
                 for (var i = 3; i <= p.verts.Length; i++) {
@@ -61,14 +57,12 @@ namespace kmty.geom.csg {
                     ns.Add(n);
                     ns.Add(n);
                     ns.Add(n);
-                    ts.Add(count++);
-                    ts.Add(count++);
-                    ts.Add(count++);
+                    num += 3;
                 }
             }
             dst.SetVertices(vs);
             dst.SetNormals(ns);
-            dst.SetTriangles(ts, 0);
+            dst.SetTriangles(Enumerable.Range(0, num).ToArray(), 0);
             dst.RecalculateNormals();
             dst.RecalculateBounds();
             return dst;
