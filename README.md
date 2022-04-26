@@ -6,6 +6,7 @@
 
 
 ![img](Imgs/voronoi_csg_bunny.png)
+![img](Imgs/anim.gif)
 
 ## Usage
 

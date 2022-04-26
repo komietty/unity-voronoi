@@ -6,6 +6,7 @@ using kmty.geom.csg;
 
 namespace kmty.geom.crackin {
     using VG = VoronoiGraph3D;
+    using UR = UnityEngine.Random;
 
 public class Crackin : MonoBehaviour {
         [SerializeField] protected GameObject tgt;
@@ -24,7 +25,10 @@ public class Crackin : MonoBehaviour {
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
 
+            var state = UR.state;
+            UR.InitState(1);
             var bf = new BistellarFlip3D(numPoint, scale);
+            UR.state = state;
             var vg = new VG(bf.Nodes.ToArray());
             var ms = new List<(Matrix4x4 t, Mesh m)>(vg.nodes.Count);
             var itr = 0;

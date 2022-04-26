@@ -110,21 +110,17 @@ namespace kmty.geom.d3.delauney {
 
         public BistellarFlip3D(int num, float scl) {
             stack = new Stack<TR>();
-            var s = scl * 3;
-            root = new Tetrahedra(
-                new d3(0, 0, 0),
-                new d3(s, 0, 0),
-                new d3(0, s, 0),
-                new d3(0, 0, s));
+            root  = new Tetrahedra(
+                d3.zero,
+                new d3(scl * 3, 0, 0),
+                new d3(0, scl * 3, 0),
+                new d3(0, 0, scl * 3));
             nodes = new List<DN> { new DN(root) };
 
-            var state = UR.state;
-            UR.InitState(123);
             for (var i = 0; i < num; i++) {
                 Split(UR.value * scl, UR.value * scl, UR.value * scl);
                 Leagalize();
             }
-            UR.state = state;
         }
 
         void Split(float x, float y, float z) { Split(new d3(x, y, z)); }
