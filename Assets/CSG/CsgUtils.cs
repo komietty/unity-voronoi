@@ -68,29 +68,16 @@ namespace kmty.geom.csg {
             return dst;
         }
 
-        static Mesh Fragmentize(Mesh src, out List<Vector3> out_vrts, out List<Vector3> out_nrms) {
-            var vrts = src.vertices;
+        static void Fragmentize(Mesh src, out List<Vector3> out_vrts, out List<Vector3> out_nrms) {
             var tris = src.triangles;
-            var nrms = src.normals;
             var new_vrts = new Vector3[tris.Length];
             var new_nrms = new Vector3[tris.Length];
-            var new_tris = new int[tris.Length];
-            var dst = GameObject.Instantiate(src);
-            dst.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
             for (int i = 0; i < tris.Length; i++) {
-                var t = tris[i];
-                new_vrts[i] = vrts[t];
-                new_nrms[i] = nrms[t];
-                new_tris[i] = i;
+                new_vrts[i] = src.vertices[tris[i]];
+                new_nrms[i] = src.normals[tris[i]];
             }
-
-            dst.vertices = new_vrts;
-            dst.triangles = new_tris;
-            dst.RecalculateNormals();
             out_vrts = new_vrts.ToList();
             out_nrms = new_nrms.ToList();
-            return dst;
         }
     }
 }

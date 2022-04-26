@@ -4,13 +4,14 @@ using Unity.Mathematics;
 namespace kmty.geom.csg {
     using static Unity.Mathematics.math;
     using d3 = double3;
+    using PG = Polygon;
 
     public enum OpType { Union, Subtraction, Intersection, Clip }
 
     public class CsgTree {
-        public Polygon[] polygons { get; }
+        public PG[] polygons { get; }
 
-        public CsgTree(Polygon[] src) { polygons = src; }
+        public CsgTree(PG[] src) { polygons = src; }
         public CsgTree(CsgTree src) { polygons = Util.Clone(src.polygons); }
 
         public CsgTree Oparation(CsgTree pair, OpType op) {
@@ -24,8 +25,8 @@ namespace kmty.geom.csg {
         }
 
         public CsgTree Union(CsgTree pair){
-            var tn = new Node(new List<Polygon>(this.polygons));
-            var pn = new Node(new List<Polygon>(pair.polygons));
+            var tn = new Node(new List<PG>(this.polygons));
+            var pn = new Node(new List<PG>(pair.polygons));
             tn.ClipTo(pn);
             pn.ClipTo(tn);
             pn.Invert();
@@ -36,8 +37,8 @@ namespace kmty.geom.csg {
         }
 
         public CsgTree Subtraction(CsgTree pair){
-            var tn = new Node(new List<Polygon>(this.polygons));
-            var pn = new Node(new List<Polygon>(pair.polygons));
+            var tn = new Node(new List<PG>(this.polygons));
+            var pn = new Node(new List<PG>(pair.polygons));
             tn.Invert();
             tn.ClipTo(pn);
             pn.ClipTo(tn);
@@ -50,8 +51,8 @@ namespace kmty.geom.csg {
         }
 
         public CsgTree Intersection(CsgTree pair){
-            var tn = new Node(new List<Polygon>(this.polygons));
-            var pn = new Node(new List<Polygon>(pair.polygons));
+            var tn = new Node(new List<PG>(this.polygons));
+            var pn = new Node(new List<PG>(pair.polygons));
             tn.Invert();
             pn.ClipTo(tn);
             pn.Invert();
@@ -63,8 +64,8 @@ namespace kmty.geom.csg {
         }
 
         public CsgTree Clip(CsgTree pair){
-            var tn = new Node(new List<Polygon>(this.polygons));
-            var pn = new Node(new List<Polygon>(pair.polygons));
+            var tn = new Node(new List<PG>(this.polygons));
+            var pn = new Node(new List<PG>(pair.polygons));
             tn.ClipTo(pn);
             return new CsgTree(tn.GetPolygonData().ToArray());
         }
@@ -100,22 +101,22 @@ namespace kmty.geom.csg {
             else             return isFacingSide ? FACE : BACK;
         }
 
-        public (Polygon onPF, Polygon onPB, Polygon face, Polygon back) SplitPolygon(Polygon src) {
-            var l = src.verts.Length;
+        public (PG onPF, PG onPB, PG face, PG back) SplitPolygon(PG p) {
+            var l = p.verts.Length;
             var pType = 0;
             var vType = new int[l];
 
             for(var i = 0; i < l; i++) {
-                var t = GetType(src.verts[i]);
+                var t = GetType(p.verts[i]);
                 pType   |= t;
                 vType[i] = t;
             }
 
             switch (pType) {
                 default: throw new System.Exception();
-                case 0: return (dot(n, src.plane.n) > 0) ? (src, null, null, null) : (null, src, null, null);
-                case 1: return (null, null, src, null);
-                case 2: return (null, null, null, src);
+                case 0: return (dot(n, p.plane.n) > 0) ? (p, null, null, null) : (null, p, null, null);
+                case 1: return (null, null, p, null);
+                case 2: return (null, null, null, p);
                 case 3:
                     var faces = new List<d3>();
                     var backs = new List<d3>();
@@ -123,8 +124,8 @@ namespace kmty.geom.csg {
                         var j = (i + 1) % l;
                         var si = vType[i];
                         var sj = vType[j];
-                        var vi = src.verts[i];
-                        var vj = src.verts[j];
+                        var vi = p.verts[i];
+                        var vj = p.verts[j];
 
                         if      (si == FACE) faces.Add(vi);
                         else if (si == BACK) backs.Add(vi);
@@ -137,13 +138,7 @@ namespace kmty.geom.csg {
                             backs.Add(v);
                         }
                     }
-                    if(faces.Count < 3 || backs.Count < 3) throw new System.Exception();
-                    return (
-                        null,
-                        null,
-                        new Polygon(faces.ToArray()),
-                        new Polygon(backs.ToArray())
-                    );
+                    return (null, null, new PG(faces.ToArray()), new PG(backs.ToArray()));
             }
         }
     }
@@ -156,8 +151,8 @@ namespace kmty.geom.csg {
             this.verts = vs;
             this.plane = new Plane(verts[0], verts[1], verts[2]);
         }
-            
-        public Polygon(Polygon src) {
+
+        public Polygon(PG src) {
             this.verts = Util.Clone(src.verts);
             this.plane = new Plane(verts[0], verts[1], verts[2]);
         }
@@ -169,30 +164,30 @@ namespace kmty.geom.csg {
     }
 
     public class Node {
-        public Node nf { get; private set; }
-        public Node nb { get; private set; }
-        public Plane plane { get; private set; }
-        public List<Polygon> polygons { get; private set; }
+        Node nf;
+        Node nb;
+        Plane pl;
+        List<PG> polygons;
 
         public Node() {
-            polygons = new List<Polygon>();
+            polygons = new List<PG>();
         }
 
-        public Node(List<Polygon> src) {
-            polygons = new List<Polygon>();
+        public Node(List<PG> src) {
+            polygons = new List<PG>();
             Build(src);
         }
         
         public Node(Node n) {
             polygons = Util.Clone(n.polygons);
-            nf = n.nf != null ? new Node(n.nf) : null;
-            nb = n.nb != null ? new Node(n.nb) : null;
-            plane = n.plane != null ? new Plane(n.plane) : null;
+            nf = n.nf != null ? new Node(n.nf)  : null;
+            nb = n.nb != null ? new Node(n.nb)  : null;
+            pl = n.pl != null ? new Plane(n.pl) : null;
         }
 
         public void Invert() {
             for (var i = 0; i < polygons.Count; i++) polygons[i].Flip();
-            plane?.Flip();
+            pl?.Flip();
             nf?.Invert();
             nb?.Invert();
             var tmp = nf;
@@ -200,13 +195,13 @@ namespace kmty.geom.csg {
             nb = tmp;
         }
 
-        List<Polygon> ClipPolygons(List<Polygon> src) {
-            if (plane == null) return new List<Polygon>(src);
-            var pf = new List<Polygon>();
-            var pb = new List<Polygon>();
+        List<PG> ClipPolygons(List<PG> src) {
+            if (pl == null) return new List<PG>(src);
+            var pf = new List<PG>();
+            var pb = new List<PG>();
             for (var i = 0; i < src.Count; i++){
                 var p = src[i];
-                var o = plane.SplitPolygon(p);
+                var o = pl.SplitPolygon(p);
                 if (o.onPF != null) pf.Add(o.onPF);
                 if (o.onPB != null) pb.Add(o.onPB);
                 if (o.face != null) pf.Add(o.face);
@@ -224,20 +219,20 @@ namespace kmty.geom.csg {
             nb?.ClipTo(pair);
         }
 
-        public List<Polygon> GetPolygonData() {
+        public List<PG> GetPolygonData() {
             var clone = Util.Clone(polygons);
             if(nf != null) clone.AddRange(nf.GetPolygonData());
             if(nb != null) clone.AddRange(nb.GetPolygonData());
             return clone;
         }
 
-        public void Build(List<Polygon> src) {
+        public void Build(List<PG> src) {
             if (src.Count == 0) return;
-            if (plane == null) plane = new Plane(src[0].plane);
-            var pf = new List<Polygon>();
-            var pb = new List<Polygon>();
+            if (pl == null) pl = new Plane(src[0].plane);
+            var pf = new List<PG>();
+            var pb = new List<PG>();
             for (var i = 0; i < src.Count; i++) {
-                var o = plane.SplitPolygon(src[i]);
+                var o = pl.SplitPolygon(src[i]);
                 if (o.onPF != null) polygons.Add(o.onPF);
                 if (o.onPB != null) polygons.Add(o.onPB);
                 if (o.face != null) pf.Add(o.face);
@@ -245,6 +240,8 @@ namespace kmty.geom.csg {
             }
             if (pf.Count > 0) { if (nf == null) { nf = new Node(); } nf.Build(pf); }
             if (pb.Count > 0) { if (nb == null) { nb = new Node(); } nb.Build(pb); }
+            pf.Clear();
+            pb.Clear();
         }
     }
 
@@ -256,17 +253,17 @@ namespace kmty.geom.csg {
             return d;
         } 
 
-        public static Polygon[] Clone(Polygon[] src){
+        public static PG[] Clone(PG[] src){
             var l = src.Length;
-            var d = new Polygon[l];
-            for (var i = 0; i < l; i++) d[i] = new Polygon(src[i]);
+            var d = new PG[l];
+            for (var i = 0; i < l; i++) d[i] = new PG(src[i]);
             return d;
         } 
 
-        public static List<Polygon> Clone(List<Polygon> src){
+        public static List<PG> Clone(List<PG> src){
             var l = src.Count;
-            var d = new List<Polygon>();
-            for (var i = 0; i < l; i++) d.Add(new Polygon(src[i]));
+            var d = new List<PG>();
+            for (var i = 0; i < l; i++) d.Add(new PG(src[i]));
             return d;
         } 
     }

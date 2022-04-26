@@ -22,7 +22,7 @@ namespace kmty.geom.d3.delauney {
         public DelaunayGraphNode3D(Tetrahedra t) : this(t.a, t.b, t.c, t.d) { }
         public DelaunayGraphNode3D(d3 a, d3 b, d3 c, d3 d) {
             tetrahedra = new Tetrahedra(a, b, c, d);
-            neighbor = new List<DN>();
+            neighbor = new List<DN>(4);
         }
 
         public (TR t1, TR t2, TR t3, TR t4, DN n1, DN n2, DN n3, DN n4) Split(d3 p) {
@@ -206,20 +206,19 @@ namespace kmty.geom.d3.delauney {
     }
 
     public class VoronoiGraphFace3D {
-        public Vector3 key;
-        public List<SG> segments = new List<SG>();
-        public List<d3> vrts = new List<d3>();
-        public d3 center;
+        public Vector3 key { get; }
+        List<d3> vrts;
 
-        public VoronoiGraphFace3D(Vector3 key, d3 nodeCenter) {
+        public VoronoiGraphFace3D(Vector3 key) {
             this.key = key;
-            this.center = nodeCenter;
+            this.vrts = new List<d3>();
         }
 
         public void TryAddVrts(SG s, d3 center){
             bool f1 = false;
             bool f2 = false;
-            foreach (var v in vrts) {
+            for (var i = 0; i < vrts.Count; i++) {
+                var v = vrts[i];
                 if(all(v == s.a - center)) f1 = true;
                 if(all(v == s.b - center)) f2 = true;
             }
@@ -242,60 +241,14 @@ namespace kmty.geom.d3.delauney {
             for (var i = 1; i < vrts.Count; i++) {
                 var va = vrts[i];
                 var vb = vrts[(i + 1) % vrts.Count];
-                if (dot(cross(vb - va, v0 - va), v0) > 0) {
-                    alts.Add(v0);
-                    alts.Add(va);
-                    alts.Add(vb);
-                } else {
-                    alts.Add(v0);
-                    alts.Add(vb);
-                    alts.Add(va);
-                }
+                var f  = dot(cross(vb - va, v0 - va), v0) > 0;
+                alts.Add(v0);
+                alts.Add(f ? va : vb);
+                alts.Add(f ? vb : va);
             }
             return alts.ToArray();
         }
 
-        public bool TryAddSegs(SG s) {
-            if (segments.Any(i => i.EqualsIgnoreDirection(s))) return false;
-            segments.Add(s);
-            return true;
-        }
-
-        public d3[] Meshilify_F() {
-            var bgn = segments[0];
-            var end = new SG(d3.zero, new d3(1, 1, 1));
-            var flg = false;
-            var c = bgn.a;
-
-            for (var j = 1; j < segments.Count; j++) {
-                var s = segments[j];
-                if (all(c == s.a) || all(c == s.b)) {
-                    end = s;
-                    flg = true;
-                }
-            }
-
-            if (!flg) return new d3[0]; 
-
-            var vts = new d3[(segments.Count - 2) * 3];
-            int itr = 0;
-
-            foreach (var s in segments) {
-                if (s.Equals(end) || s.Equals(bgn)) continue;
-                var va = s.a - center;
-                var vb = s.b - center;
-                var vc = c   - center;
-                var f = dot(cross(vb - va, vc - va), vc) > 0;
-                vts[itr * 3 + 0] = vc;
-                vts[itr * 3 + 1] = f ? va : vb;
-                vts[itr * 3 + 2] = f ? vb : va;
-                itr++;
-            }
-
-            return vts;
-        }
-/*
-*/
     }
 
     public class VoronoiGraphNode3D {
@@ -310,36 +263,33 @@ namespace kmty.geom.d3.delauney {
         public void Meshilify() {
             faces = segments.Select(s => s.pair)
                             .Distinct()
-                            .Select(p => new VF(p, center))
+                            .Select(p => new VF(p))
                             .ToList();
 
-            foreach (var s in segments) {
-                foreach (var f in faces) {
+            for (var i = 0; i < segments.Count; i++) {
+                for (var j = 0; j < faces.Count; j++) {
+                    var s = segments[i];
+                    var f = faces[j];
                     if (s.pair == f.key) f.TryAddVrts(s.segment, center);
-                    //if (s.pair == f.key) f.TryAddSegs(s.segment);
                 }
             }
            
             var nums = 0;
             var vrts = new List<Vector3>();
-            var closed = true;
 
-            foreach (var f in faces) {
-                var vs = f.Meshilify();
-                //var vs = f.Meshilify_F();
-                closed &= vs.Length > 0;
-                nums += vs.Length;
-                vrts.AddRange(vs.Select(v => (Vector3)(float3)v));
+            for (var i = 0; i < faces.Count; i++) {
+                var f = faces[i];
+                var v = f.Meshilify();
+                nums += v.Length;
+                vrts.AddRange(v.Select(v => (Vector3)(float3)v));
             }
 
-            if (closed) {
-                mesh = new Mesh();
-                mesh.SetVertices(vrts);
-                mesh.SetTriangles(Enumerable.Range(0, nums).ToArray(), 0);
-                mesh.RecalculateNormals();
-                mesh.RecalculateTangents();
-                mesh.RecalculateBounds();
-            }
+            mesh = new Mesh();
+            mesh.SetVertices(vrts);
+            mesh.SetTriangles(Enumerable.Range(0, nums).ToArray(), 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateTangents();
+            mesh.RecalculateBounds();
         }
     }
 
@@ -348,14 +298,16 @@ namespace kmty.geom.d3.delauney {
 
         public VoronoiGraph3D(DN[] dns) {
             nodes = new Dictionary<d3, VN>();
-            foreach (var d in dns) {
+            for (var i = 0; i < dns.Length; i++) {
+                var d = dns[i];
                 var t = d.tetrahedra;
                 var c = t.GetCircumscribedSphere().center;
                 if (!nodes.ContainsKey(t.a)) nodes.Add(t.a, new VN(t.a));
                 if (!nodes.ContainsKey(t.b)) nodes.Add(t.b, new VN(t.b));
                 if (!nodes.ContainsKey(t.c)) nodes.Add(t.c, new VN(t.c));
                 if (!nodes.ContainsKey(t.d)) nodes.Add(t.d, new VN(t.d));
-                d.neighbor.ForEach(n => {
+                for(var j = 0; j < d.neighbor.Count; j++){
+                    var n  = d.neighbor[j];
                     var c1 = n.tetrahedra.GetCircumscribedSphere().center;
                     var v  = c1 - c;
                     var s  = new SG(c, c1);
@@ -371,7 +323,7 @@ namespace kmty.geom.d3.delauney {
                     AssignSegment(t.a, t.d, v, s);
                     AssignSegment(t.b, t.d, v, s);
                     AssignSegment(t.c, t.d, v, s);
-                });
+                }
             }
 
             const double th = 1e-9d;
