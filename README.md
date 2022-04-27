@@ -1,6 +1,6 @@
 # unity-voronoi-csg
-- Delauney diagram module (2D/3D) with bistellar flip algolithm.
-- Voronoi diagram module (2D/3D) from delauney triangles above.
+- Delauney diagram (2D/3D) with bistellar flip algolithm.
+- Voronoi diagram (2D/3D) from delauney triangles above.
 - CSG(Constructive Solid Geometry) for an atbitrary mesh.
 
 
