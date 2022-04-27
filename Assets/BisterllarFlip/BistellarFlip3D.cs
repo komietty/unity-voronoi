@@ -100,6 +100,25 @@ namespace kmty.geom.d3.delauney {
             if (!HasFacet(t)) return null;
             return neighbor.Find(n => n.HasFacet(t));
         }
+
+        /*
+        public Mesh Meshilify() {
+            var vrts = new List<Vector3>();
+            for (var i = 0; i < faces.Count; i++) {
+                var f = faces[i];
+                var v = f.Meshilify();
+                vrts.AddRange(v.Select(v => (Vector3)(float3)v));
+            }
+
+            var m = new Mesh();
+            m.SetVertices(vrts);
+            m.SetTriangles(Enumerable.Range(0, 12).ToArray(), 0);
+            m.RecalculateNormals();
+            m.RecalculateTangents();
+            m.RecalculateBounds();
+            return m;
+        }
+        */
     }
 
     public class BistellarFlip3D {
@@ -202,24 +221,24 @@ namespace kmty.geom.d3.delauney {
     }
 
     public class VoronoiGraphFace3D {
-        public Vector3 key { get; }
+        public d3 key { get; }
         List<d3> vrts;
 
-        public VoronoiGraphFace3D(Vector3 key) {
+        public VoronoiGraphFace3D(d3 key) {
             this.key = key;
             this.vrts = new List<d3>();
         }
 
-        public void TryAddVrts(SG s, d3 center){
+        public void TryAddVrts(SG s, d3 cntr){
             bool f1 = false;
             bool f2 = false;
             for (var i = 0; i < vrts.Count; i++) {
                 var v = vrts[i];
-                if(all(v == s.a - center)) f1 = true;
-                if(all(v == s.b - center)) f2 = true;
+                if(all(v == s.a - cntr)) f1 = true;
+                if(all(v == s.b - cntr)) f2 = true;
             }
-            if(!f1) vrts.Add(s.a - center);
-            if(!f2) vrts.Add(s.b - center);
+            if(!f1) vrts.Add(s.a - cntr);
+            if(!f2) vrts.Add(s.b - cntr);
         }
 
 
@@ -249,14 +268,14 @@ namespace kmty.geom.d3.delauney {
 
     public class VoronoiGraphNode3D {
         public d3 center;
-        public Mesh mesh;
-        public List<(SG sg, Vector3 pair)> segments;
+        public List<(SG sg, d3 pair)> segments;
         public List<VF> faces;
+
         public VoronoiGraphNode3D(d3 c) {
             this.center = c;
-            this.segments = new List<(SG, Vector3)>();
+            this.segments = new List<(SG, d3)>();
         }
-        public void Meshilify() {
+        public Mesh Meshilify() {
             faces = segments.Select(s => s.pair)
                             .Distinct()
                             .Select(p => new VF(p))
@@ -266,7 +285,7 @@ namespace kmty.geom.d3.delauney {
                 for (var j = 0; j < faces.Count; j++) {
                     var s = segments[i];
                     var f = faces[j];
-                    if (s.pair == f.key) f.TryAddVrts(s.sg, center);
+                    if (all(s.pair == f.key)) f.TryAddVrts(s.sg, center);
                 }
             }
            
@@ -280,12 +299,13 @@ namespace kmty.geom.d3.delauney {
                 vrts.AddRange(v.Select(v => (Vector3)(float3)v));
             }
 
-            mesh = new Mesh();
-            mesh.SetVertices(vrts);
-            mesh.SetTriangles(Enumerable.Range(0, nums).ToArray(), 0);
-            mesh.RecalculateNormals();
-            mesh.RecalculateTangents();
-            mesh.RecalculateBounds();
+            var m = new Mesh();
+            m.SetVertices(vrts);
+            m.SetTriangles(Enumerable.Range(0, nums).ToArray(), 0);
+            m.RecalculateNormals();
+            m.RecalculateTangents();
+            m.RecalculateBounds();
+            return m;
         }
     }
 
@@ -326,7 +346,7 @@ namespace kmty.geom.d3.delauney {
             void AssignSegment(d3 pair, d3 cntr, d3 v1, SG sg) {
                 if (math.abs(math.dot(pair - cntr, v1)) < th) {
                     nodes.TryGetValue(cntr, out VN v);
-                    v?.segments.Add((sg, (float3)pair));
+                    v?.segments.Add((sg, pair));
                 }
             }
 

@@ -545,13 +545,11 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: f1b1a7f366a0b4644a18e06f36fa4115, type: 2}
   mat2: {fileID: 2100000, guid: e18e423e53804534aaf1b8e963260683, type: 2}
   numPoint: 30
-  reset: 114
-  createMesh: 1
-  showDebugCube: 0
+  createMesh: 0
   showDelaunay: 0
   showVoronoi: 0
   debugDNodeId: 0
-  debugVNodeId: 9
+  debugVNodeId: 0
 --- !u!4 &1349591346
 Transform:
   m_ObjectHideFlags: 0

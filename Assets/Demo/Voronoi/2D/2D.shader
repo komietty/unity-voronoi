@@ -1,4 +1,4 @@
-﻿Shader "Unlit/Drawer2D"
+﻿Shader "Unlit/2D"
 {
     Properties
     {
