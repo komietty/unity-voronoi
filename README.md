@@ -1,7 +1,7 @@
 # unity-voronoi-csg
 - Delauney diagram (2D/3D) with bistellar flip algolithm.
 - Voronoi diagram (2D/3D) from delauney triangles above.
-- [CSG](https://en.wikipedia.org/wiki/Constructive_solid_geometry)(Constructive Solid Geometry) for an atbitrary mesh.
+- [CSG(Constructive Solid Geometry)](https://en.wikipedia.org/wiki/Constructive_solid_geometry) for an atbitrary mesh.
 
 
 ![img](Imgs/voronoi_csg_bunny.png)
