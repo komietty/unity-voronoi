@@ -59,14 +59,17 @@ namespace kmty.geom.crackin
                 b.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 b.useGravity = false;
                 f.mesh = o;
-                r.sharedMaterial = new Material(mat);
-                mat.SetColor("_Color", Color.HSVToRGB(UnityEngine.Random.value, 1, 1));
+                var _mat = new Material(mat);
+                _mat.SetColor("_Color", Color.HSVToRGB(UnityEngine.Random.value, 1, 1));
+                r.sharedMaterial = _mat; 
                 rbs.Add(b);
             }
 
             sw.Stop();
             Debug.Log("generate csg: " + sw.ElapsedMilliseconds + "ms");
             tgt.SetActive(false);
+
+            Debug.Log("Press F key, then the object will fall and broken");
         }
 
         void Update() {

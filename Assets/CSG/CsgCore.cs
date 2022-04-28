@@ -240,8 +240,6 @@ namespace kmty.geom.csg {
             }
             if (pf.Count > 0) { if (nf == null) { nf = new Node(); } nf.Build(pf); }
             if (pb.Count > 0) { if (nb == null) { nb = new Node(); } nb.Build(pb); }
-            pf.Clear();
-            pb.Clear();
         }
     }
 
