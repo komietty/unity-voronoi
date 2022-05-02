@@ -153,10 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mat: {fileID: 2100000, guid: e18e423e53804534aaf1b8e963260683, type: 2}
-  numPoint: 200
-  createMesh: 0
-  drawCirlcle: 0
-  showVoronoi: 1
+  numPoint: 30
 --- !u!4 &214460159
 Transform:
   m_ObjectHideFlags: 0

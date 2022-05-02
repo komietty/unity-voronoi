@@ -142,13 +142,13 @@ namespace kmty.geom.d2.delaunay {
     public class VoronoiGraphNode2D {
         public f2 center;
         public List<SG> segments;
-        public Mesh mesh;
+
         public VoronoiGraphNode2D(f2 c) {
             this.center = c;
             this.segments = new List<SG>();
         }
 
-        public void Meshilify() {
+        public Mesh Meshilify() {
             var l = segments.Count * 3;
             var vtcs = new List<Vector3>();
             var tris = Enumerable.Range(0, l).ToArray();
@@ -162,9 +162,10 @@ namespace kmty.geom.d2.delaunay {
                 else   { vtcs.Add(a); vtcs.Add(b); }
             });
             if (vtcs.Count != l) Debug.Log(vtcs.Count);
-            mesh = new Mesh();
-            mesh.vertices = vtcs.ToArray();
-            mesh.triangles = tris;
+            var m = new Mesh();
+            m.vertices = vtcs.ToArray();
+            m.triangles = tris;
+            return m;
         }
     }
 
