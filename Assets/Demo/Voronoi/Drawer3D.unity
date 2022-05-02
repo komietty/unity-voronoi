@@ -391,7 +391,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &859164159
 Transform:
   m_ObjectHideFlags: 0
@@ -640,14 +640,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbad98235c7159b408275e5cb7779356, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mat: {fileID: 2100000, guid: f1b1a7f366a0b4644a18e06f36fa4115, type: 2}
-  mat2: {fileID: 2100000, guid: e18e423e53804534aaf1b8e963260683, type: 2}
+  mat: {fileID: 2100000, guid: e18e423e53804534aaf1b8e963260683, type: 2}
   numPoint: 200
-  createMesh: 1
-  showDelaunay: 0
-  showVoronoi: 0
-  debugDNodeId: 0
-  debugVNodeId: 0
 --- !u!4 &1349591346
 Transform:
   m_ObjectHideFlags: 0
