@@ -1,10 +1,13 @@
 using UnityEngine;
 using Unity.Mathematics;
+using System.Linq;
 
 namespace kmty.geom.d3.delauney {
     public class Drawer3D : MonoBehaviour {
         public Material mat;
         public int numPoint;
+        float min = 0f;
+        float max = 1f;
 
         void Start () {
             var bf = new BistellarFlip3D(numPoint, 1);
@@ -13,16 +16,29 @@ namespace kmty.geom.d3.delauney {
             int count = 0;
             foreach (var n in voronoi.nodes) {
                 var o = n.Value.Meshilify();
+                var c = (float3)n.Value.center;
+                if (o.vertices.Any(v => 
+                        v.x + c.x < min ||
+                        v.x + c.x > max ||
+                        v.y + c.y < min ||
+                        v.y + c.y > max ||
+                        v.z + c.z < min ||
+                        v.z + c.z > max)) continue;
                 var g = new GameObject(count.ToString());
                 var f = g.AddComponent<MeshFilter>();
                 var r = g.AddComponent<MeshRenderer>();
                 var m = new Material(mat);
-                m.SetColor("_Color", Color.HSVToRGB(UnityEngine.Random.value, 1, 1));
                 r.sharedMaterial = m;
                 f.mesh = o;
-                g.transform.position = (float3)n.Value.center * 1.01f;
+                g.transform.position = c;
                 count++;
             }
+        }
+
+        void OnDrawGizmosSelected() {
+            var c = (min + max) / 2;
+            var l = (max - min);
+            Gizmos.DrawWireCube(Vector3.one * c, Vector3.one * l);
         }
     }
 }

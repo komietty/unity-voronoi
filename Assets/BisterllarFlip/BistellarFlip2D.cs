@@ -165,6 +165,7 @@ namespace kmty.geom.d2.delaunay {
             var m = new Mesh();
             m.vertices = vtcs.ToArray();
             m.triangles = tris;
+            m.RecalculateNormals();
             return m;
         }
     }
