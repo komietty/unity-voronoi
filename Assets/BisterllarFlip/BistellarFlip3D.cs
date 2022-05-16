@@ -165,7 +165,7 @@ namespace kmty.geom.d3.delauney {
                     var p1 = n1.tetrahedra.RemainingPoint(t);
                     var p2 = n2.tetrahedra.RemainingPoint(t);
                     if (n1.tetrahedra.GetCircumscribedSphere().Contains(p2)) {
-                        if (t.Intersects(new SG(p1, p2), out d3 i, out bool isOnEdge)) {
+                        if (t.Intersects(new SG(p1, p2), out d3 i, out bool onedge)) {
                             var o = DN.Flip23(n1, n2, p1, p2, t);
                             stack.Push(o.t1);
                             stack.Push(o.t2);
@@ -178,12 +178,12 @@ namespace kmty.geom.d3.delauney {
                             nodes.Add(o.n1);
                             nodes.Add(o.n2);
                             nodes.Add(o.n3);
-                        } else if (isOnEdge) { Debug.LogWarning("point is on edge");
+                        } else if (onedge) { Debug.LogWarning("point is on edge");
                         } else {
                             d3 far;
-                            if      (Util3D.IsIntersecting(new SG(i, t.a), new SG(t.b, t.c), 1e-15d)) far = t.a;
-                            else if (Util3D.IsIntersecting(new SG(i, t.b), new SG(t.c, t.a), 1e-15d)) far = t.b;
-                            else if (Util3D.IsIntersecting(new SG(i, t.c), new SG(t.a, t.b), 1e-15d)) far = t.c;
+                            if      (Utils.IsIntersecting(new SG(i, t.a), new SG(t.b, t.c), 1e-15d)) far = t.a;
+                            else if (Utils.IsIntersecting(new SG(i, t.b), new SG(t.c, t.a), 1e-15d)) far = t.b;
+                            else if (Utils.IsIntersecting(new SG(i, t.c), new SG(t.a, t.b), 1e-15d)) far = t.c;
                             else throw new System.Exception();
 
                             var cm = t.Remaining(far);
