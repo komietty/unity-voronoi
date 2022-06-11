@@ -7,15 +7,6 @@
 ![img](Imgs/crackin.png)
 ![img](Imgs/anim.gif)
 
-### Voronoi Diagram
-Both 2D/3D versions are avairable. As for an algorithm please see the reference below.
-![img](Imgs/voronoi2d.png)
-![img](Imgs/voronoi3d.png)
-
-### CSG
-CSG module has **Intersection**, **Subtruction**, **Union** functions. The Image below shows subtruction demo.
-![img](Imgs/csg.png)
-
 ## Usage
 
 using a [simplex geom submodule](https://github.com/komietty/unity-simplex-geometry), so update submodule first.
